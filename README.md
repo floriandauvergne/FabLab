@@ -1,2 +1,0 @@
-# FabLab
- Projet FabLab
