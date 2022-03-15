@@ -1,9 +1,9 @@
 $(document).ready(function() {
-    var pageURL = $(location).attr("search");
-    console.log(pageURL.split('='));
-
-
-
+    var email = location.search.replace('?', '').split('&').map(function(val){
+        return val.split('=');
+    });
+    console.log(email[0][1]);
+if(email[0][1]=="test.admin@lycee-jeanrostand.fr"){
     var donnees=new Array();
 
     donnees["Nom"]="TEST";
@@ -22,6 +22,7 @@ $(document).ready(function() {
     $("input")[4].value=donnees["Age"];
     $("input")[5].value=donnees["Tel"];
     $("img").attr("src", donnees["Photo"]);
+}
 
     $("#Modif").click(function (){
         $("#Modif").css({display: "none"})
