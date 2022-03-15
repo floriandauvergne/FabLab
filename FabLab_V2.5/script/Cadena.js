@@ -26,6 +26,6 @@ $(document).ready(function() {
         $("#cadenas_liste").css({display: "block"})
         $("#cadenas_modif").css({display: "none"})
         $("#cadenas_ajout").css({display: "none"})
+        $("#Membre_Ajout_Plusieurs_Formulaire").css({display: "none"})
     })
-
 })

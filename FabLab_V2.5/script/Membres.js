@@ -35,4 +35,12 @@ $(document).ready(function() {
         $("#Membres_liste").css({display: "block"})
         $("#Membres_Modif").css({display: "none"})
     })
+
+    $("#Membre_Ajout_Plusieurs").click(function (){
+        $("#Membre_Ajout_Plusieurs_Formulaire").css({display: "block"})
+    })
+
+    $("#Membre_Ajout_Plusieurs_Annuler").click(function (){
+        $("#Membre_Ajout_Plusieurs_Formulaire").css({display: "none"})
+    })
 })

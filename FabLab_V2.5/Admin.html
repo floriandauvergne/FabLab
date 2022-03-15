@@ -162,7 +162,14 @@
         <button>Afficher plus</button><br>
         <button id="Ajouter_un_membre">Ajouter un membre</button>
         <button id="Affiche_Membres_présent">Afficher les membres présent</button>
-        <button>Ajouter plusieurs membres</button>
+        <button id="Membre_Ajout_Plusieurs">Ajouter plusieurs membres</button>
+    </div>
+
+    <div id="Membre_Ajout_Plusieurs_Formulaire" style="display: none">
+        <label for="myfile">Selectionner un fichier .CSV:</label>
+        <br>
+        <input type="file" id="myfile" name="myfile">
+        <button>Confirmer</button><button id="Membre_Ajout_Plusieurs_Annuler">Annuler</button>
     </div>
 
     <div align="center" id="Membres_présent">
@@ -231,7 +238,12 @@
                 <td><input disabled  value="Mail"></td>
             </tr>
             <tr>
-                <td><input value="Grade"></td>
+                <td><select  value="Grade">
+                    <option>Admin</option>
+                    <option>Manager</option>
+                    <option>Teacher</option>
+                    <option>Member</option>
+                </select> </td>
             </tr>
             <tr>
                 <td><input disabled  value="Age"></td>
