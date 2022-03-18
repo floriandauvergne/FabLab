@@ -1,42 +1,69 @@
 $(document).ready(function() {
-    var email = location.search.replace('?', '').split('&').map(function(val){
-        return val.split('=');
+    var url="https://a3b49ec7-c30d-4962-9bad-63b0c319f410.mock.pstmn.io/"
+
+    var request = $.ajax({
+        method: "GET",
+        url: url+"profil.php",
+        data: { mail : localStorage.getItem('Email')},
+        dataType: "json"
     });
-    console.log(email[0][1]);
-if(email[0][1]=="test.admin@lycee-jeanrostand.fr"){
-    var donnees=new Array();
 
-    donnees["Nom"]="TEST";
-    donnees["Prenom"]="Admin";
-    donnees["Age"]="20";
-    donnees["Type"]="Eleve";
-    donnees["Grade"]="Admin";
-    donnees["Tel"]="01 49 65 78 24";
-    donnees["Mail"]="test.admin@lycee-jeanrostand.fr";
-    donnees["Photo"]="../../Image/photo_profil.jpg";
+    request.done(function(msg) {
 
-    $("input")[0].value=donnees["Nom"];
-    $("input")[1].value=donnees["Prenom"];
-    $("input")[2].value=donnees["Mail"];
-    $("input")[3].value=donnees["Grade"];
-    $("input")[4].value=donnees["Age"];
-    $("input")[5].value=donnees["Tel"];
-    $("img").attr("src", donnees["Photo"]);
-}
+        switch (msg.Grade){
+            case 1 : msg.Grade="Member";break;
+            case 2 : msg.Grade="Teacher";break;
+            case 3 : msg.Grade="Manager";break;
+            case 4 : msg.Grade="Admin";break;
+        }
+        $("input")[0].value=msg.Nom;
+        $("input")[1].value=msg.Prenom;
+        $("input")[2].value=msg.Mail;
+        $("input")[3].value=msg.Grade;
+        $("input")[4].value=msg.Age;
+        $("input")[5].value=msg.Tel;
+        $("img").attr("src", msg.Photo);
+
+    })
+    request.fail(function(jqXHR, textStatus) {
+        alert("Request failed: " + textStatus);
+    });
 
     $("#Modif").click(function (){
+        var ancien_mail=$("input")[2].value;
         $("#Modif").css({display: "none"})
         $("input").prop( "disabled", false );
-        // $("input").children[0].prop( "disabled", true );
+        $("#grade").prop( "disabled", true );
         $("div").append("<button id=\"Confirmer\">Confirmer</button><button id=\"Annuler\">Annuler</button>");
 
         $("#Annuler").click(function (){location.reload();})
 
         $("#Confirmer").click(function (){
-            alert("Changement effectuee");
-            location.reload();
+
+            request = $.ajax({
+                method: "POST",
+                url: "profil.php",
+                data: {
+                    ancien_mail: ancien_mail,
+                    modif :"1",
+                    nom:$("input")[0].value,
+                    prenom:$("input")[1].value,
+                    age:$("input")[4].value,
+                    tel:$("input")[5].value,
+                    mail:$("input")[2].value,
+                    Photo:null
+                },
+                dataType: "json"
+            });
+            request.done(function (msg){
+                if(msg.success==true){
+                    alert("Changement effectuee");
+                    location.reload();
+                }
+                else
+                    alert("Une erreur est arrivée");
+            })
+
         })
     })
 })
-
-// $("img").src="ada";
