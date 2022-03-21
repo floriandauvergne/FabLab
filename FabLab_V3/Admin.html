@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script src="./script/Cadena.js"></script>
+    <script src="./script/Info.js"></script>
+    <script src="./script/Membres.js"></script>
+</head>
+<body  align="center">
+<header>
+    <p>Prénom Grade<a href="Profil.html"><img src="../../Image/photo_profil.jpg" height="40" width="40"></a></p>
+</header>
+
+<button id="cadenas_bouton">Cadenas</button>
+<button id="Info_bouton">Info.adhérents</button>
+<button id="Membres_bouton">Membres</button>
+
+<article id="Cadenas">
+    <div id="cadenas_liste" style="display: none">
+        <a href="javascript:void(0)">Nom du cadenas/ID/Etat batterie</a><br>
+        <a href="javascript:void(0)">Nom du cadenas/ID/Etat batterie</a><br>
+        <a href="javascript:void(0)">Nom du cadenas/ID/Etat batterie</a><br>
+        <a href="javascript:void(0)">Nom du cadenas/ID/Etat batterie</a><br>
+        <a href="javascript:void(0)">Nom du cadenas/ID/Etat batterie</a><br>
+        <button id="ajout">Ajouter un cadenas</button>
+    </div>
+
+    <div id="cadenas_modif" style="display: none">
+        <table align="center">
+            <thead>
+            <tr>
+                <th>Modifier le cadenas</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><input  value="Nom"></td>
+            </tr>
+            <tr>
+                <td><input   value="ID"></td>
+            </tr>
+            <tr>
+                <td><input   value="Niveau de sécurité"></td>
+            </tr>
+            </tbody>
+        </table>
+        <button>Confirmer</button><button class="annulation">Annuler</button>
+    </div>
+
+    <div id="cadenas_ajout" style="display: none">
+        <table align="center">
+            <thead>
+            <tr>
+                <th>Ajouter un cadenas</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><input  placeholder="Nom"></td>
+            </tr>
+            <tr>
+                <td><input   placeholder="ID"></td>
+            </tr>
+            <tr>
+                <td><input  placeholder="Niveau de sécurité"></td>
+            </tr>
+            </tbody>
+        </table>
+        <button>Confirmer</button><button class="annulation">Annuler</button>
+    </div>
+</article>
+
+
+
+<article id="Info">
+    <div align="center" id="Info_tab" style="display: none">
+        <h2>Nombres d'adhérents total: 14</h2>
+        <table>
+            <thead>
+            <tr>
+                <th colspan="5">Temps de passage</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Lundi</td>
+                <td>Mardi</td>
+                <td>Mercredi</td>
+                <td>Jeudi</td>
+                <td>Vendredi</td>
+            </tr>
+            <tr align="center">
+                <td>Nom_1 :1H <br> Nom_2 :3H</td>
+                <td>Personne</td>
+                <td>Personne</td>
+                <td>Nom_1 :4H <br> Nom_2 :2H</td>
+                <td>Personne</td>
+            </tr>
+            </tbody>
+        </table>
+        <table>
+            <thead>
+            <tr>
+                <th colspan="5">Ouverture cadenas</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Lundi</td>
+                <td>Mardi</td>
+                <td>Mercredi</td>
+                <td>Jeudi</td>
+                <td>Vendredi</td>
+            </tr>
+            <tr align="center">
+                <td>Nom_1<li>Imprimante x2</li> <br> Nom_2 <li>Armoire x4</li></td>
+
+                <td>Aucun cadenas</td>
+
+                <td>Aucun cadenas</td>
+
+                <td>Nom_1 <li>Imprimante x1</li><li>Armoire x2</li></td>
+
+                <td>Aucun cadenas</td>
+            </tr>
+            </tbody>
+        </table>
+        <a href="javascript:void(0)" id="logs">Afficher l'intégralité des logs</a>
+    </div>
+
+    <div align="center" id="Info_log" style="display: none">
+        <ul>X à ouvert Y à XXH</ul>
+        <ul>X à ouvert Y à XXH</ul>
+        <ul>X à ouvert Y à XXH</ul>
+        <ul>X à ouvert Y à XXH</ul>
+        <ul>X à ouvert Y à XXH</ul>
+        <ul>X à ouvert Y à XXH</ul>
+        <ul>X à ouvert Y à XXH</ul>
+        <ul>X à ouvert Y à XXH</ul>
+        <ul>X à ouvert Y à XXH</ul>
+        <ul>X à ouvert Y à XXH</ul>
+        <ul>X à ouvert Y à XXH</ul>
+        <ul>X à ouvert Y à XXH</ul>
+        <ul>X à ouvert Y à XXH</ul>
+        <ul>X à ouvert Y à XXH</ul>
+        <ul>X à ouvert Y à XXH</ul>
+        <a href="javascript:void(0)" id="retour">Retour</a>
+    </div>
+</article>
+
+<article id="Membres">
+    <div id="Membres_liste" style="display: none">
+        <a href="javascript:void(0)">P.Nom</a><br>
+        <a href="javascript:void(0)">P.Nom</a><br>
+        <a href="javascript:void(0)">P.Nom</a><br>
+        <a href="javascript:void(0)">P.Nom</a><br>
+        <a href="javascript:void(0)">P.Nom</a><br>
+        <button>Afficher plus</button><br>
+        <button id="Ajouter_un_membre">Ajouter un membre</button>
+        <button id="Affiche_Membres_présent">Afficher les membres présent</button>
+        <button>Ajouter plusieurs membres</button>
+    </div>
+
+    <div align="center" id="Membres_présent">
+        <table>
+            <thead>
+            <tr>
+                <th colspan="5">Membres présent à 10H</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Nom</td>
+                <td>Nom</td>
+                <td>Nom</td>
+                <td>Nom</td>
+                <td>Nom</td>
+            </tr>
+            <tr align="center">
+                <td><img src="../Image/photo_profil.jpg" height="40" width="40"></td>
+                <td><img src="../Image/photo_profil.jpg" height="40" width="40"></td>
+                <td><img src="../Image/photo_profil.jpg" height="40" width="40"></td>
+                <td><img src="../Image/photo_profil.jpg" height="40" width="40"></td>
+                <td><img src="../Image/photo_profil.jpg" height="40" width="40"></td>
+            </tr>
+
+            <tr>
+                <td>Nom</td>
+                <td>Nom</td>
+                <td>Nom</td>
+                <td>Nom</td>
+                <td>Nom</td>
+            </tr>
+            <tr align="center">
+                <td><img src="../Image/photo_profil.jpg" height="40" width="40"></td>
+                <td><img src="../Image/photo_profil.jpg" height="40" width="40"></td>
+                <td><img src="../Image/photo_profil.jpg" height="40" width="40"></td>
+                <td><img src="../Image/photo_profil.jpg" height="40" width="40"></td>
+                <td><img src="../Image/photo_profil.jpg" height="40" width="40"></td>
+            </tr>
+            </tbody>
+        </table>
+        <ul>X à ouvert Y à XXH</ul>
+        <ul>X à ouvert Y à XXH</ul>
+        <ul>X à ouvert Y à XXH</ul>
+        <ul>X à ouvert Y à XXH</ul>
+        <ul>X à ouvert Y à XXH</ul>
+    </div>
+    <div id="Membres_Modif" style="display: none" >
+        <table align="center">
+            <thead>
+            <tr>
+                <th>Info</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><img src="../Image/photo_profil.jpg" height="50" width="50"></td>
+            </tr>
+            <tr>
+                <td><input disabled value="Nom"></td>
+            </tr>
+            <tr>
+                <td><input disabled   value="Prénom"></td>
+            </tr>
+            <tr>
+                <td><input disabled  value="Mail"></td>
+            </tr>
+            <tr>
+                <td><input value="Grade"></td>
+            </tr>
+            <tr>
+                <td><input disabled  value="Age"></td>
+            </tr>
+            <tr>
+                <td><input disabled  value="Téléphone"></td>
+            </tr>
+            </tbody>
+        </table>
+        <button>Confirmer</button><button id="Membres_Modif_Annuler" >Annuler</button>
+    </div>
+
+    <div id="Membres_Ajout" style="display: none" >
+        <table align="center">
+            <thead>
+            <tr>
+                <th>Info</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><img src="../Image/photo_profil.jpg" height="50" width="50"></td>
+            </tr>
+            <tr>
+                <td><input value="Nom"></td>
+            </tr>
+            <tr>
+                <td><input value="Prénom"></td>
+            </tr>
+            <tr>
+                <td><input value="Mail"></td>
+            </tr>
+            <tr>
+                <td><input value="Grade"></td>
+            </tr>
+            <tr>
+                <td><input value="Age"></td>
+            </tr>
+            <tr>
+                <td><input value="Téléphone"></td>
+            </tr>
+            </tbody>
+        </table>
+        <button>Confirmer</button><button id="Membres_Ajout_Annuler">Annuler</button>
+    </div>
+</article>
+</body>
+</html>
