@@ -1,9 +1,9 @@
 $(document).ready(function() {
-    var url="https://a3b49ec7-c30d-4962-9bad-63b0c319f410.mock.pstmn.io/"
+    var url="https://b268076a-1104-466e-837a-a82b9ada121d.mock.pstmn.io/profil"
 
     var request = $.ajax({
         method: "GET",
-        url: url+"profil.php",
+        url: url+"/recuperer",
         data: { mail : localStorage.getItem('Email')},
         dataType: "json"
     });
@@ -30,7 +30,6 @@ $(document).ready(function() {
     });
 
     $("#Modif").click(function (){
-        var ancien_mail=$("input")[2].value;
         $("#Modif").css({display: "none"})
         $("input").prop( "disabled", false );
         $("#grade").prop( "disabled", true );
@@ -42,9 +41,9 @@ $(document).ready(function() {
 
             request = $.ajax({
                 method: "POST",
-                url: "profil.php",
+                url: url+"/modifier",
                 data: {
-                    ancien_mail: ancien_mail,
+                    ancien_mail: $("input")[2].value,
                     modif :"1",
                     nom:$("input")[0].value,
                     prenom:$("input")[1].value,
