@@ -1,33 +1,5 @@
-// $(document).ready(function() {
-//     var url="Profil.html"
-//     $("#false").hide();
-//     $("button").click(function (){
-//         if($("input")[0].value!=""&&$("input")[1].value!=""){
-//             localStorage.setItem('Email', $("input")[0].value);
-//
-//             if($("input")[0].value=="test.eleve@lycee-jeanrostand.fr"){
-//                 window.location="Adherent.html";
-//             }
-//
-//             else if($("input")[0].value=="test.admin@lycee-jeanrostand.fr"){
-//                 window.location="Admin.html";
-//             }
-//             else {
-//                 $("#false").show();
-//                 setTimeout(() => { $("#false").hide(); }, 1500);
-//             }
-//         }
-//         else{
-//             alert("Veuillez renseigner les champs")
-//         }
-//     })
-//     if(window.closed){
-//         localStorage.clear();
-//     }
-// })
-
 $(document).ready(function() {
-    var url="Profil.html"
+    var url="https://b268076a-1104-466e-837a-a82b9ada121d.mock.pstmn.io/"
 
     $("#false").hide();
 
@@ -38,18 +10,30 @@ $(document).ready(function() {
 
             localStorage.setItem('Email', $("#mail").val());
 
-            if($("#mail").val()=="test.eleve@lycee-jeanrostand.fr"){
-                window.location="Adherent.html";
-            }
+            var request = $.ajax({
+                method: "GET",
+                url: url + "connexion",
+                data: {email: localStorage.getItem('Email'),password:$("#mdp").val()},
+                dataType: "json"
+            });
 
-            else if($("#mail").val()=="test.admin@lycee-jeanrostand.fr"){
-                window.location="Admin.html";
-            }
-            else {
-                $("#false").text('Le compte n\'existe pas');
-                $("#false").show();
-                setTimeout(() => { $("#false").hide(); }, 1500);
-            }
+
+            request.done(function (msg){
+                if(msg.succes==true){
+                    if(msg.grade<4){
+                        window.location="Adherent.html";
+                    }
+
+                    else if(msg.grade==4){
+                        window.location="Admin.html";
+                    }
+                }
+                else {
+                    $("#false").text('Le compte n\'existe pas');
+                    $("#false").show();
+                    setTimeout(() => { $("#false").hide(); }, 1500);
+                }
+            })
         }
         else{
             $("#false").text('Veuillez renseigner tout les champs');

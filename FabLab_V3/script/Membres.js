@@ -1,14 +1,15 @@
 $(document).ready(function() {
+    var url="https://b268076a-1104-466e-837a-a82b9ada121d.mock.pstmn.io/membre/"
 
     var request = $.ajax({
         method: "GET",
-        url: url+"membres.php",
+        url: url+"recuperer",
         data: {},
         dataType: "json"
     });
     request.done(function(msg) {
         for(i=0;i<msg.length;i++){
-            $("#Membres_présent").find("tbody").append("<tr><td>"+msg[i].Nom+"</td><td><img src=\""+msg[i].Photo+"\" height=\"40\" width=\"40\"></td></tr>");
+            $("#Membres_présent").find("tbody").append("<tr><td>"+msg[i].Nom+"."+msg[i].Prenom[0]+"</td><td><img src=\""+msg[i].Photo+"\" height=\"40\" width=\"40\"></td></tr>");
         }
     })
     request.fail(function(jqXHR, textStatus) {

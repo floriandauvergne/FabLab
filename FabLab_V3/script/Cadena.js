@@ -1,9 +1,8 @@
 $(document).ready(function() {
-    var url="https://a3b49ec7-c30d-4962-9bad-63b0c319f410.mock.pstmn.io/"
-
+    var url="https://b268076a-1104-466e-837a-a82b9ada121d.mock.pstmn.io/cadenas/"
     var request = $.ajax({
         method: "GET",
-        url: url+"cadenas.php",
+        url: url+"recuperer",
         dataType: "json"
     });
 
@@ -16,13 +15,14 @@ $(document).ready(function() {
             else
                 msg[i].Actif="Non"
 
-        var cadenas= "<dl><dt><a href=\"javascript:void(0)\">"+msg[i].NomCadenas+"</a></dt><dd>Id: "+msg[i].idCadenas+" Niveau de sécurité: "+msg[i].Niveau+" Actif : "+msg[i].Actif+"</dd></dl>"
+            var cadenas= "<dl><dt><a href=\"javascript:void(0)\">"+msg[i].NomCadenas+"</a></dt><dd>Id: "+msg[i].idCadenas+" Niveau de sécurité: "+msg[i].Niveau+" Actif : "+msg[i].Actif+"</dd></dl>"
 
-        $("#cadenas_liste").find("ul").append("<li><a href=\"javascript:void(0)\">"+cadenas+"</a></li>")}
+            $("#cadenas_liste").find("ul").append("<li><a href=\"javascript:void(0)\">"+cadenas+"</a></li>")}
     })
     request.fail(function(jqXHR, textStatus) {
         alert("Request failed: " + textStatus);
     });
+
 
     $($('#cadenas_ajout').find("button")).click(function (){
         var nom=$('#cadenas_ajout').find("input")[0].value

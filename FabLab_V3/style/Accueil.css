@@ -10,9 +10,19 @@ body {
     color: aliceblue;
 }
 
+#contact {
+    color: #6a6d73;
+}
+
 .responsive {
-    width: 35%;
-    height: 40%;
+    position: relative;
+    margin-left : 25px;
+    margin-right : 25px;
+    margin-top: 10px;
+    width: 60vh;
+    height: 30%;
+    box-shadow: 0 15px 25px rgba(0,0,0,.6);
+    border-radius: 10px;
 }
 
 h1 {
@@ -29,9 +39,10 @@ h1 {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 400px;
+    width: 60vh;
+    height: 50vh;
     padding: 40px;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -40%);
     background: rgba(0,0,0,.5);
     box-sizing: border-box;
     box-shadow: 0 15px 25px rgba(0,0,0,.6);
@@ -108,7 +119,7 @@ h1 {
     text-transform: uppercase;
     overflow: hidden;
     transition: .5s;
-    margin-top: 40px;
+    margin-top: 0px;
     margin-left: 25%;
     letter-spacing: 4px
 }
@@ -117,14 +128,22 @@ h1 {
     text-align: center;
 }
 
+.banniere img {
+    margin-top: 20px;
+}
+
+.banniere h1 {
+    margin: 5px;
+}
+
 .login-box a:hover {
     background: #03e9f4;
     color: #fff;
     border-radius: 5px;
-    box-shadow: 0 0 5px #03e9f4,
-    0 0 25px #03e9f4,
-    0 0 50px #03e9f4,
-    0 0 100px #03e9f4;
+    box-shadow: 0 0 2px #03e9f4,
+    0 0 10px #03e9f4,
+    0 0 20px #03e9f4,
+    0 0 40px #03e9f4;
 }
 
 .login-box a span {
