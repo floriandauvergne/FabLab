@@ -1,5 +1,6 @@
 $(document).ready(function() {
     var url="https://b268076a-1104-466e-837a-a82b9ada121d.mock.pstmn.io/cadenas/"
+
     var request = $.ajax({
         method: "GET",
         url: url+"recuperer",
@@ -15,34 +16,107 @@ $(document).ready(function() {
             else
                 msg[i].Actif="Non"
 
-            var cadenas= "<dl><dt><a href=\"javascript:void(0)\">"+msg[i].NomCadenas+"</a></dt><dd>Id: "+msg[i].idCadenas+" Niveau de sécurité: "+msg[i].Niveau+" Actif : "+msg[i].Actif+"</dd></dl>"
+            var cadenas= "<dl><dt><a href=\"javascript:void(0)\">"+msg[i].NomCadenas+"</a></dt><dd>Id: "+msg[i].idCadenas+"/Niveau de sécurité: "+msg[i].Niveau+"/Actif : "+msg[i].Actif+"</dd></dl>"
 
-            $("#cadenas_liste").find("ul").append("<li><a href=\"javascript:void(0)\">"+cadenas+"</a></li>")}
+            $("#cadenas_liste").append(cadenas)
+        }
+        $("#cadenas_liste").append("<button id=\"ajout\">Ajouter un cadenas</button>")
+
+        $( "#cadenas_liste" ).children().click(function(){
+            if(this.id=="ajout"){
+                $("#cadenas_liste").css({display: "none"})
+                $("#cadenas_modif").css({display: "none"})
+                $("#cadenas_ajout").css({display: "block"})
+            }
+            else{
+                $("#cadenas_liste").css({display: "none"})
+                $("#cadenas_modif").css({display: "block"})
+                var nom=this.childNodes[0].childNodes[0].innerText
+
+                var cadenas=this.childNodes[1].innerText.split('/').join(',').split(':').join(',').split(',')
+
+                var id=cadenas[1];
+                var secu=cadenas[3];
+
+                $('#cadenas_modif').find("input")[0].value=nom;
+                $('#cadenas_modif').find("input")[1].value=id;
+                $('#cadenas_modif').find("input")[2].value=secu;
+
+                console.log(cadenas);
+                $("#cadenas_ajout").css({display: "none"})
+            }
+        })
+
     })
     request.fail(function(jqXHR, textStatus) {
         alert("Request failed: " + textStatus);
     });
 
 
-    $($('#cadenas_ajout').find("button")).click(function (){
+    $($('#cadenas_ajout').find("button")[0]).click(function (){
+
         var nom=$('#cadenas_ajout').find("input")[0].value
         var ID=$('#cadenas_ajout').find("input")[1].value
         var Secu=$('#cadenas_ajout').find("input")[2].value
 
-        var request = $.ajax({
-            method: "POST",
-            url: url+"cadenas.php",
-            data:{id:ID,Nom:nom,Niveau:Secu},
-            dataType: "json"
-        });
+        if(nom!=""&&ID!=""&&Secu!=""){
+            request = $.ajax({
+                method: "POST",
+                url: url+"ajouter",
+                data: {
+                    nom:nom,
+                    ID:ID,
+                    Secu:Secu
+                },
+                dataType: "json"
+            });
+            request.done(function(msg) {
+                if(msg.action==true){
+                    alert("Cadenas ajouté")
+                    $('#cadenas_ajout').find("input")[0].value=""
+                    $('#cadenas_ajout').find("input")[1].value=""
+                    $('#cadenas_ajout').find("input")[2].value=""
+                }
+            })
+            request.fail(function(jqXHR, textStatus) {
+                alert("Request failed: " + textStatus);
+            });
 
+        }
+        else
+            alert("Non rempli")
 
-        request.done(function(msg) {
+    })
 
-        })
-        request.fail(function(jqXHR, textStatus) {
-            alert("Request failed: " + textStatus);
-        });
+    $($('#cadenas_modif').find("button")[0]).click(function (){
+
+        var nom=$('#cadenas_modif').find("input")[0].value
+        var ID=$('#cadenas_modif').find("input")[1].value
+        var Secu=$('#cadenas_modif').find("input")[2].value
+
+        if(nom!=""&&ID!=""&&Secu!=""){
+            request = $.ajax({
+                method: "POST",
+                url: url+"modifier",
+                data: {
+                    nom:nom,
+                    ID:ID,
+                    Secu:Secu
+                },
+                dataType: "json"
+            });
+            request.done(function(msg) {
+                if(msg.action==true){
+                    alert("Cadenas modifié")
+                }
+            })
+            request.fail(function(jqXHR, textStatus) {
+                alert("Request failed: " + textStatus);
+            });
+
+        }
+        else
+            alert("Non rempli")
 
     })
 
@@ -58,18 +132,7 @@ $(document).ready(function() {
         $("#Membres").css({display: "none"})
     })
 
-    $( "#cadenas_liste" ).children().click(function(){
-        if(this.id=="ajout"){
-            $("#cadenas_liste").css({display: "none"})
-            $("#cadenas_modif").css({display: "none"})
-            $("#cadenas_ajout").css({display: "block"})
-        }
-        else{
-            $("#cadenas_liste").css({display: "none"})
-            $("#cadenas_modif").css({display: "block"})
-            $("#cadenas_ajout").css({display: "none"})
-        }
-    })
+
 
     $(".annulation").click(function(){
         $("#cadenas_liste").css({display: "block"})

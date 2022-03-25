@@ -7,8 +7,6 @@ $(document).ready(function() {
         dataType: "json"
     });
     request.done(function (msg) {
-        console.log(msg.Grade)
-
         switch (msg.Grade) {
             case 1 :
                 msg.Grade = "Member";

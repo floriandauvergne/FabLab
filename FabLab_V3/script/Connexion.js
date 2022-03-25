@@ -19,7 +19,7 @@ $(document).ready(function() {
 
 
             request.done(function (msg){
-                if(msg.succes==true){
+                if(msg.action==true){
                     if(msg.grade<4){
                         window.location="Adherent.html";
                     }

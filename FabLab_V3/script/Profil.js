@@ -1,4 +1,6 @@
 $(document).ready(function() {
+    $('body').hide();
+
     var url="https://b268076a-1104-466e-837a-a82b9ada121d.mock.pstmn.io/profil"
 
     var request = $.ajax({
@@ -6,6 +8,22 @@ $(document).ready(function() {
         url: url+"/recuperer",
         data: { mail : localStorage.getItem('Email')},
         dataType: "json"
+    });
+
+    $(function () {
+        function checkPendingRequest() {
+            if ($.active > 0) {
+                $('html').css('cursor', 'wait');
+                 window.setTimeout(checkPendingRequest, 1000);
+            }
+            else {
+                $('html').css('cursor', 'auto');
+                $("body").show();
+
+            }
+        };
+
+        window.setTimeout(checkPendingRequest, 0);
     });
 
     request.done(function(msg) {
@@ -33,6 +51,7 @@ $(document).ready(function() {
         $("#Modif").css({display: "none"})
         $("input").prop( "disabled", false );
         $("#grade").prop( "disabled", true );
+        $("#age").prop( "disabled", true );
         $("div").append("<button id=\"Confirmer\">Confirmer</button><button id=\"Annuler\">Annuler</button>");
 
         $("#Annuler").click(function (){location.reload();})
@@ -44,7 +63,6 @@ $(document).ready(function() {
                 url: url+"/modifier",
                 data: {
                     ancien_mail: $("input")[2].value,
-                    modif :"1",
                     nom:$("input")[0].value,
                     prenom:$("input")[1].value,
                     age:$("input")[4].value,
@@ -55,7 +73,7 @@ $(document).ready(function() {
                 dataType: "json"
             });
             request.done(function (msg){
-                if(msg.success==true){
+                if(msg.action==true){
                     alert("Changement effectuee");
                     location.reload();
                 }
@@ -65,4 +83,7 @@ $(document).ready(function() {
 
         })
     })
+    if(window.closed){
+        localStorage.clear();
+    }
 })
