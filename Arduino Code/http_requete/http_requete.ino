@@ -1,3 +1,5 @@
+
+#include <ArduinoJson.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
 
@@ -59,6 +61,11 @@ void requete_deverouiller()
     if (httpResponseCode > 0) {
       String payload = http.getString();
       Serial.println(payload);
+      
+      StaticJsonBuffer<300> JSONBuffer;
+      JsonObject& parsed = JSONBuffer.parseObject(payload); //Parse message
+      String action = parsed["action"];
+      Serial.println(action);
     }
     else {
       Serial.print("Error code: ");
