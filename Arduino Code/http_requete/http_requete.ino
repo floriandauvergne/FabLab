@@ -1,42 +1,62 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 
-const char* ssid = "Eleves";  // Mettre votre SSID Wifi
+const char* ssid = "Eleves";
 const char* password = "ml$@0931584S";
+String serverName = "https://b268076a-1104-466e-837a-a82b9ada121d.mock.pstmn.io/";
 
-//Your Domain name with URL path or IP address with path
-String serverName = "https://a3b49ec7-c30d-4962-9bad-63b0c319f410.mock.pstmn.io/connexion.php?x-api-key=PMAK-6239917c06a0322ee60d301f-ec61c58157f39459a3ec18d49026c95814";
+void setup()
+{
 
-void setup() {
-  Serial.begin(115200); 
-
-  WiFi.begin(ssid, password);
-  Serial.println("Connecting");
-  while(WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-  Serial.println("");
-  Serial.print("Connected to WiFi network with IP Address: ");
-  Serial.println(WiFi.localIP());
+  Serial.begin(115200);
+  //Connexion Wifi
+  wifi_connexion();
 }
 
-void loop() {
-  //Check WiFi connection status
-/*  if(WiFi.status()== WL_CONNECTED){
-    HTTPClient http;
+void loop()
+{
+  
+}
 
-    String serverPath = serverName;
-    
+void wifi_connexion()
+{
+  // We start by connecting to a WiFi network
+
+    Serial.println();
+    Serial.println();
+    Serial.print("Connecting to ");
+    Serial.println(ssid);
+
+    WiFi.begin(ssid, password);
+
+    while (WiFi.status() != WL_CONNECTED) {
+        delay(500);
+        Serial.print(".");
+    }
+
+    Serial.println("");
+    Serial.println("WiFi connected");
+    Serial.println("IP address: ");
+    Serial.println(WiFi.localIP());
+
+    requete_deverouiller();
+}
+
+
+void requete_deverouiller()
+{
+  //Check WiFi connection status
+  if (WiFi.status() == WL_CONNECTED) {
+    HTTPClient http;
+    String serverPath = serverName + "cadenas/ouvrir";
+
     // Your Domain name with URL path or IP address with path
     http.begin(serverPath.c_str());
-    
+
     // Send HTTP GET request
     int httpResponseCode = http.GET();
-    
-    if (httpResponseCode>0) {
-      Serial.print("HTTP Response code: ");
-      Serial.println(httpResponseCode);
+
+    if (httpResponseCode > 0) {
       String payload = http.getString();
       Serial.println(payload);
     }
@@ -44,10 +64,6 @@ void loop() {
       Serial.print("Error code: ");
       Serial.println(httpResponseCode);
     }
-    // Free resources
     http.end();
   }
-  else {
-    Serial.println("WiFi Disconnected");
-  }*/
 }
