@@ -13,18 +13,18 @@ void setup()
 
   //Connexion NDEF Reader
   nfc.begin(); //Initialisation du module
-  Serial.println("NDEF Reader");
+  Serial.println("NDEF Reader Start");
 }
 
 
 void loop()
 {
-if (nfc.tagPresent())
-  { 
-    NfcTag tag = nfc.read(); //Lecture de la carte NFC
-    UID_scan = tag.getUidString(); //Acquisition du code UID de la carte
-    UID_scan.replace(" ", "");
-    
-    Serial.println("ID Card : " + UID_scan); //Renvoi sur le moniteur du code UID
-  }
+  if (nfc.tagPresent())
+    { 
+      NfcTag tag = nfc.read(); //Lecture de la carte NFC
+      UID_scan = tag.getUidString(); //Acquisition du code UID de la carte
+      UID_scan.replace(" ", "");
+      
+      Serial.println("ID Card : " + UID_scan); //Renvoi sur le moniteur du code UID
+    }
 }

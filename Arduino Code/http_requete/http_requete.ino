@@ -1,4 +1,3 @@
-
 #include <ArduinoJson.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
@@ -14,8 +13,7 @@ void setup()
   wifi_connexion();
 
   requete_deverouiller();
-  //delay(5000);
-  //requete_deverouiller();
+
 }
 
 void loop()
@@ -36,11 +34,12 @@ void wifi_connexion()
   }
   Serial.println("");
   Serial.println("WiFi connected");
-  Serial.println("IP address: ");
+  Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
-;
-}
 
+  Serial.print("ESP Board MAC Address: ");
+  Serial.println(WiFi.macAddress());
+}
 
 void requete_deverouiller()
 {
@@ -66,10 +65,7 @@ void requete_deverouiller()
       String idCadenas = parsed["idCadenas"];
       String action = parsed["action"];
       Serial.println(action); 
-
-
-      //if(idCadenas == id du cadenas)
-      
+  
       if(action == "true")
       {
         light_led(2,2000);
