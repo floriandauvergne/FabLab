@@ -36,9 +36,6 @@ void wifi_connexion()
   Serial.println("WiFi connected");
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
-
-  Serial.print("ESP Board MAC Address: ");
-  Serial.println(WiFi.macAddress());
 }
 
 void requete_deverouiller()
@@ -82,6 +79,14 @@ void requete_deverouiller()
     }
     http.end();
   }
+}
+
+void start_inscription ()
+{
+  Serial.print("ESP Board MAC Address: ");
+  Serial.println(WiFi.macAddress());
+
+  
 }
 
 
