@@ -16,7 +16,6 @@ void setup()
   Serial.println("NDEF Reader Start");
 }
 
-
 void loop()
 {
   if (nfc.tagPresent())
@@ -28,3 +27,8 @@ void loop()
       Serial.println("ID Card : " + UID_scan); //Renvoi sur le moniteur du code UID
     }
 }
+
+#define RXD2 16   // ESP32 pin GIOP
+#define TXD2 17   // ESP32 pin GIOP
+
+MFRC522 rfid(RXD2, TXD2);
