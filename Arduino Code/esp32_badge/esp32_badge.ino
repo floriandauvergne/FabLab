@@ -1,85 +1,45 @@
-#include <MFRC522.h>
 #include <SPI.h>
+#include <MFRC522.h>
 
+#define SSpin   21  // pin SDA du module RC522
+#define RSTpin  27  // pin RST du module RC522
 
-//Constants
-#define SS_PIN 16
-#define RST_PIN 17
+MFRC522 rfid(SSpin, RSTpin);
 
-//Variables
-byte nuidPICC[4] = {0, 0, 0, 0};
-MFRC522::MIFARE_Key key;
-MFRC522 rfid = MFRC522(SS_PIN, RST_PIN);
-
-
-void setup() {
-  //Init Serial USB
+void setup()
+{
   Serial.begin(115200);
-  Serial.println(F("Initialize System"));
+  Serial.println("RFID-RC522 - Reader");  
   
   SPI.begin();
   rfid.PCD_Init();
+  Serial.println("SPI and RFID start");
+
 }
-
-
-void loop() {
-  readRFID();
-  delay(100);
-}
-
-
-
-void readRFID() {
-  // Read RFID card
-  for (byte i = 0; i < 6; i++) key.keyByte[i] = 0xFF;
-
-  // Look for new 1 cards
-  if (!rfid.PICC_IsNewCardPresent())
-  { 
-    //Serial.println("No Card");
-    return;
-  }
-  else
+void loop()
+{
+  if (rfid.PICC_IsNewCardPresent())  // on a dédecté un tag
   {
-    Serial.println("New Card Present");
-    // Verify if the NUID has been readed
-    if (!rfid.PICC_ReadCardSerial())
+    if (rfid.PICC_ReadCardSerial())  // on a lu avec succès son contenu
     {
-      //Serial.println("No Reading");
-      return;
+
+      Serial.println("Voici l'UID de ce tag:");
+      Serial.print("const byte bonUID[");
+      Serial.print(rfid.uid.size);
+      Serial.print("] = {");
+
+      for (byte i = 0; i < rfid.uid.size; i++)
+      {
+        Serial.print(rfid.uid.uidByte[i]);
+        if (i < rfid.uid.size - 1)
+        {
+        Serial.print(", ");
+         }
+         else
+         Serial.println("};");
+      }
+      Serial.println();
+      delay (2000);
     }
-    else
-    {
-      Serial.println("Reading Card on Serial Port");
-    }
-  }
-
-
-  // Store NUID into nuidPICC array
-  for (byte i = 0; i < 4; i++) {
-    nuidPICC[i] = rfid.uid.uidByte[i];
-  }
-
-  Serial.print(F("RFID In dec: "));
-  printDec(rfid.uid.uidByte, rfid.uid.size);
-  Serial.println();
-  // Halt PICC
-  rfid.PICC_HaltA();
-  // Stop encryption on PCD
-  rfid.PCD_StopCrypto1();
-}
-
-
-
-void printHex(byte *buffer, byte bufferSize) {
-  for (byte i = 0; i < bufferSize; i++) {
-    Serial.print(buffer[i] < 0x10 ? " 0" : " ");
-    Serial.print(buffer[i], HEX);
-  }
-}
-void printDec(byte *buffer, byte bufferSize) {
-  for (byte i = 0; i < bufferSize; i++) {
-    Serial.print(buffer[i] < 0x10 ? " 0" : " ");
-    Serial.print(buffer[i], DEC);
   }
 }
