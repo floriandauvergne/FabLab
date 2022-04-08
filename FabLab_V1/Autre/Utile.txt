@@ -1,7 +1,0 @@
- $.getJSON("Test.php", function(result){
-    if(result.name==="John"){window.location = 'Test.php?nom='.concat(result.name);}
-     else{window.location = 'Test.php';}
- });
- $('body').bind('DOMSubtreeModified', function () {
-
- });
