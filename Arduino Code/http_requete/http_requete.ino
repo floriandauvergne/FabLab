@@ -11,9 +11,7 @@ void setup()
   Serial.begin(115200);
   //Connexion Wifi
   wifi_connexion();
-
   requete_deverouiller();
-
 }
 
 void loop()

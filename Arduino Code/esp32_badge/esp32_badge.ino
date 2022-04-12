@@ -30,24 +30,25 @@ void cardPresent()
 {
   if (rfid.PICC_IsNewCardPresent())  // on a détecté un tag
   {
-    
+
     if (rfid.PICC_ReadCardSerial())  // on a lu avec succès son contenu
     {
       digitalWrite(2, HIGH);
-      Serial.print("UID : ");
+      Serial.println("UID : ");
 
       String uid = "";
       for (byte i = 0; i < rfid.uid.size; i++)
       {
-        Serial.println(rfid.uid.uidByte[i], HEX);
-        uid = uid +  (rfid.uid.uidByte[i], HEX);
-        Serial.println(uid);
-/*        if (i < rfid.uid.size - 1)
+        Serial.println(rfid.uid.uidByte[i]);
+        String str = String(rfid.uid.uidByte[i], HEX);
+        uid = uid + str;
+      }
+      for (byte i = 0; i < uid.length(); i++)
+      {
+        if (uid[i] >= 'a' && uid[i] <= 'z')
         {
-          Serial.print(", ");
+          uid[i] = uid[i] - 32;
         }
-        else
-          Serial.println("};");*/
       }
       Serial.println(uid);
       delay (1000);
@@ -55,4 +56,12 @@ void cardPresent()
     }
   }
 
+}
+
+String decToHex(byte decValue, byte desiredStringLength) {
+
+  String hexString = String(decValue, HEX);
+  while (hexString.length() < desiredStringLength) hexString = "0" + hexString;
+
+  return hexString;
 }
