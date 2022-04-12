@@ -1,10 +1,12 @@
 #include <SPI.h>
 #include <MFRC522.h>
 
-#define SSpin   5  // pin SDA du module RC522
-#define RSTpin  27  // pin RST du module RC522
+#define SSpin   21   // pin SDA du module RC522
+#define RSTpin  2  // pin RST du module RC522
 
 MFRC522 rfid(SSpin, RSTpin);
+
+int ledpin = 0;
 
 void setup()
 {
@@ -16,6 +18,8 @@ void setup()
   Serial.println("SPI and RFID start");
 
 }
+
+
 void loop()
 {
   cardPresent();
@@ -24,30 +28,31 @@ void loop()
 
 void cardPresent()
 {
-  digitalWrite(2, HIGH);
   if (rfid.PICC_IsNewCardPresent())  // on a détecté un tag
   {
+    
     if (rfid.PICC_ReadCardSerial())  // on a lu avec succès son contenu
     {
+      digitalWrite(2, HIGH);
+      Serial.print("UID : ");
 
-      Serial.println("Voici l'UID de ce tag:");
-      Serial.print("const byte bonUID[");
-      Serial.print(rfid.uid.size);
-      Serial.print("] = {");
-
+      String uid = "";
       for (byte i = 0; i < rfid.uid.size; i++)
       {
-        Serial.print(rfid.uid.uidByte[i]);
-        if (i < rfid.uid.size - 1)
+        Serial.println(rfid.uid.uidByte[i], HEX);
+        uid = uid +  (rfid.uid.uidByte[i], HEX);
+        Serial.println(uid);
+/*        if (i < rfid.uid.size - 1)
         {
           Serial.print(", ");
         }
         else
-          Serial.println("};");
+          Serial.println("};");*/
       }
-      Serial.println();
-      delay (2000);
+      Serial.println(uid);
+      delay (1000);
+      digitalWrite(2, LOW);
     }
   }
-  digitalWrite(2, LOW);
+
 }
