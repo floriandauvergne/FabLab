@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 #include <SPI.h>
 #include <MFRC522.h>
 #include <ArduinoJson.h>
@@ -22,7 +21,7 @@ void setup()
   rfid.PCD_Init();
   delay(500);
   wifi_connexion();
-  
+
   Serial.println("\nRFID-RC522 - Reader");
 }
 
@@ -32,7 +31,7 @@ void loop()
   cardPresent();
 }
 
-
+//-------------------------------------------------------//
 
 void wifi_connexion()
 {
@@ -49,7 +48,7 @@ void wifi_connexion()
   Serial.println("WiFi connected");
 }
 
-
+//-------------------------------------------------------//
 
 void cardPresent()
 {
@@ -58,6 +57,7 @@ void cardPresent()
 
     if (rfid.PICC_ReadCardSerial())  // on a lu avec succès son contenu
     {
+      light_led(2, 500);
       String uid = "";
       for (byte i = 0; i < rfid.uid.size; i++)
       {
@@ -73,11 +73,11 @@ void cardPresent()
       }
       Serial.println("ID Carte : " + uid);
       requete_deverouiller(uid);
-      delay (500);
     }
   }
 }
 
+//-------------------------------------------------------//
 
 void requete_deverouiller(String uid)
 {
@@ -85,7 +85,7 @@ void requete_deverouiller(String uid)
   if (WiFi.status() == WL_CONNECTED)
   {
     HTTPClient http;
-    
+
     String serverPath = serverName + "cadenas/ouvrir?idCadenas=" + getStringMacAddress() + "&idCarte=" + uid;
 
     Serial.println(serverPath);
@@ -105,15 +105,17 @@ void requete_deverouiller(String uid)
       String action = parsed["action"];
       Serial.println(action);
 
-      if (action == "true")
+      if (idCadenas == getStringMacAddress())
       {
-        light_led(2, 500);
+        if (action == "true")
+        {
+          light_led(2, 500);
+        }
+        else if (action == "false")
+        {
+          light_led(13, 500);
+        }
       }
-      else if (action == "false")
-      {
-        light_led(13, 500);
-      }
-
     }
     else {
       Serial.print("Error code: ");
@@ -123,6 +125,7 @@ void requete_deverouiller(String uid)
   }
 }
 
+//-------------------------------------------------------//
 
 void light_led(int pin, int temps)
 {
@@ -133,7 +136,7 @@ void light_led(int pin, int temps)
   delay(temps);
 }
 
-
+//-------------------------------------------------------//
 
 String getStringMacAddress()
 {
@@ -145,14 +148,4 @@ String getStringMacAddress()
   idmacAddress.remove(10, 1);
 
   return idmacAddress;
-=======
-void setup() {
-  // put your setup code here, to run once:
-
-}
-
-void loop() {
-  // put your main code here, to run repeatedly:
-
->>>>>>> Stashed changes
 }
