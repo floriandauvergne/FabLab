@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 #include <SPI.h>
 #include <MFRC522.h>
 #include <ArduinoJson.h>
@@ -144,4 +145,14 @@ String getStringMacAddress()
   idmacAddress.remove(10, 1);
 
   return idmacAddress;
+=======
+void setup() {
+  // put your setup code here, to run once:
+
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+>>>>>>> Stashed changes
 }

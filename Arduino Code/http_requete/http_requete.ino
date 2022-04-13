@@ -1,3 +1,7 @@
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 #include <ArduinoJson.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
@@ -11,7 +15,14 @@ void setup()
   Serial.begin(115200);
   //Connexion Wifi
   wifi_connexion();
+<<<<<<< Updated upstream
   requete_deverouiller();
+=======
+
+  requete_deverouiller();
+  //delay(5000);
+  //requete_deverouiller();
+>>>>>>> Stashed changes
 }
 
 void loop()
@@ -32,10 +43,19 @@ void wifi_connexion()
   }
   Serial.println("");
   Serial.println("WiFi connected");
+<<<<<<< Updated upstream
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 }
 
+=======
+  Serial.println("IP address: ");
+  Serial.println(WiFi.localIP());
+;
+}
+
+
+>>>>>>> Stashed changes
 void requete_deverouiller()
 {
   //Check WiFi connection status
@@ -60,7 +80,14 @@ void requete_deverouiller()
       String idCadenas = parsed["idCadenas"];
       String action = parsed["action"];
       Serial.println(action); 
+<<<<<<< Updated upstream
   
+=======
+
+
+      //if(idCadenas == id du cadenas)
+      
+>>>>>>> Stashed changes
       if(action == "true")
       {
         light_led(2,2000);
@@ -79,6 +106,7 @@ void requete_deverouiller()
   }
 }
 
+<<<<<<< Updated upstream
 void start_inscription ()
 {
   Serial.print("ESP Board MAC Address: ");
@@ -87,6 +115,8 @@ void start_inscription ()
   
 }
 
+=======
+>>>>>>> Stashed changes
 
 void light_led(int pin, int temps)
 {
