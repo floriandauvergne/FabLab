@@ -59,11 +59,14 @@ void cardPresent()
     {
       light_led(2, 500); //Indication de lecture de la carte
       String uid = "";
-      for (byte i = 0; i < rfid.uid.size; i++)
+      
+      for (byte i = 0; i < rfid.uid.size; i++) 
       {
-        String str = String(rfid.uid.uidByte[i], HEX);
-        uid = uid + str;
+        String str = String(rfid.uid.uidByte[i], HEX); //Récupère les bytes en décimal et les transforme en hexadécimal
+        uid = uid + str;  //Ajoute la valeur à l'UID
       }
+
+      //Transforme les lettres minuscule en lettre majuscule
       for (byte i = 0; i < uid.length(); i++)
       {
         if (uid[i] >= 'a' && uid[i] <= 'z')
@@ -71,6 +74,7 @@ void cardPresent()
           uid[i] = uid[i] - 32;
         }
       }
+      
       Serial.println("ID Carte : " + uid);
       requete_deverouiller(uid);
     }
