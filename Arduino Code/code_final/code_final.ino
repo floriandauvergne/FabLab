@@ -1,4 +1,4 @@
-#include <SPI.h>
+googl#include <SPI.h>
 #include <MFRC522.h>
 #include <ArduinoJson.h>
 #include <WiFi.h>
@@ -89,7 +89,7 @@ void requete_deverouiller(String uid)
   {
     HTTPClient http;
 
-    String serverPath = serverName + "cadenas/ouvrir?idCadenas=" + getStringMacAddress() + "&idCarte=" + uid; //Rentre les données dans l'URL de requeêted de l'API
+    String serverPath = serverName + "cadenas/ouvrir?idCadenas=" + getStringMacAddress() + "&idCarte=" + uid; //Rentre les données dans l'URL de requête de l'API
 
     Serial.println(serverPath);
     http.begin(serverPath.c_str());
