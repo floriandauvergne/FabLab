@@ -99,7 +99,7 @@ void unlock_request(String uid)
 
   if (idCadenas == getStringMacAddress()) //Si la réponse est celle pour le cadenas
   {
-    Serial.println("*Requête pour le cadenas*");
+    Serial.println("*Requête pour ce cadenas*");
     if (action == true) //Si il demande d'ouvrir
     {
       //Faire ouvrir le cadenas - Activer le micro-moteur
