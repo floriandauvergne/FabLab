@@ -1,4 +1,4 @@
-googl#include <SPI.h>
+#include <SPI.h>
 #include <MFRC522.h>
 #include <ArduinoJson.h>
 #include <WiFi.h>
@@ -12,6 +12,7 @@ const char* ssid = "Eleves";            //Nom du réseau wifi
 const char* password = "ml$@0931584S";  //Mot de passe du réseau wifi
 
 String serverName = "https://b268076a-1104-466e-837a-a82b9ada121d.mock.pstmn.io/";  //Adresse de l'API
+bool mode_veille = true;
 
 MFRC522 rfid(SSpin, RSTpin); //Donner les pins 'SS' et 'RST' du capteur RFID
 
@@ -21,8 +22,8 @@ void setup()
   //Initialisation du capteur RFID
   SPI.begin();
   rfid.PCD_Init();
-  
-  wifi_connexion(); 
+
+  wifi_connexion();
 
   Serial.println("\nRFID-RC522 - Reader");
 }
@@ -30,7 +31,15 @@ void setup()
 
 void loop()
 {
-  cardPresent();
+  if (standBy == false)
+  {
+    cardPresent();
+  }
+  else if (standBy == false)
+  {
+    standByRead();
+    delay(600 0);
+  }
 }
 
 //---------------/ Connexion au Wifi /---------------//
@@ -59,8 +68,8 @@ void cardPresent()
     {
       light_led(2, 500); //Indication de lecture de la carte
       String uid = "";
-      
-      for (byte i = 0; i < rfid.uid.size; i++) 
+
+      for (byte i = 0; i < rfid.uid.size; i++)
       {
         String str = String(rfid.uid.uidByte[i], HEX); //Récupère les bytes en décimal et les transforme en hexadécimal
         uid = uid + str;  //Ajoute la valeur à l'UID
@@ -74,22 +83,43 @@ void cardPresent()
           uid[i] = uid[i] - 32;
         }
       }
-      
+
       Serial.println("ID Carte : " + uid);
-      requete_deverouiller(uid);
+      unlock_request(uid);
     }
   }
 }
 
 //---------------/ Requête pour déverouiller /---------------//
 
-void requete_deverouiller(String uid)
+void unlock_request(String uid)
+{
+  StaticJsonBuffer<300> JSONBuffer;
+  JsonObject& parsed = JSONBuffer.parseObject(payload); //Met les données de réponse en JSON
+  String idCadenas = parsed["idCadenas"]; //Récupère la clé "idCadenas"
+  String action = parsed["action"]; //Récupère la clé "action"
+
+  if (idCadenas == getStringMacAddress()) //Si la réponse est celle pour le cadenas
+  {
+    if (action == "true") //Si il demande d'ouvrir
+    {
+      //Faire ouvrir le cadenas
+      //Activer le micro-moteur
+      light_led(2, 500); //Repère visuelle de l'ouverture
+    }
+  }
+
+}
+
+//---------------/ StandBy Read /---------------//
+
+void standByRead()
 {
   if (WiFi.status() == WL_CONNECTED) // Verifie si il est connecté au wifi
   {
     HTTPClient http;
 
-    String serverPath = serverName + "cadenas/ouvrir?idCadenas=" + getStringMacAddress() + "&idCarte=" + uid; //Rentre les données dans l'URL de requête de l'API
+    String serverPath = serverName + "cadenas/veille?idCadenas=" + getStringMacAddress(); //Rentre les données dans l'URL de requête de l'API
 
     Serial.println(serverPath);
     http.begin(serverPath.c_str());
@@ -105,14 +135,17 @@ void requete_deverouiller(String uid)
       StaticJsonBuffer<300> JSONBuffer;
       JsonObject& parsed = JSONBuffer.parseObject(payload); //Met les données de réponse en JSON
       String idCadenas = parsed["idCadenas"]; //Récupère la clé "idCadenas"
-      String action = parsed["action"]; //Récupère la clé "action"
+      String veille = parsed["veille"]; //Récupère la clé "action"
 
       if (idCadenas == getStringMacAddress()) //Si la réponse est celle pour le cadenas
       {
-        if (action == "true") //Si il demande d'ouvrir
+        if (veille == true) //Si il demande d'ouvrir
         {
-          //Faire ouvrir le cadenas
-          light_led(2, 500); //Repère visuelle de l'ouverture
+          standBy = true;
+        }
+        else if (veille == false)
+        {
+          standBy = false;
         }
       }
     }
@@ -133,6 +166,52 @@ void light_led(int pin, int temps)
   delay(temps);
   digitalWrite(pin, LOW);    //Éteint la led
   delay(temps);
+}
+
+//---------------/ Faire la requête /---------------//  \("{}")/
+
+JsonObject makeRequest(string type)
+{
+  String serverPath;
+  if (type == "unlock")
+  {
+    serverPath = serverName + "cadenas/ouvrir?idCadenas=" + getStringMacAddress() + "&idCarte=" + uid; //Rentre les données dans l'URL de requête de l'API
+  }
+  else if (type == "standby")
+  {
+    serverPath = serverName + "cadenas/veille?idCadenas=" + getStringMacAddress(); //Rentre les données dans l'URL de requête de l'API
+  }
+
+  if (WiFi.status() == WL_CONNECTED) // Verifie si il est connecté au wifi
+  {
+    HTTPClient http;
+    Serial.println(serverPath);
+    http.begin(serverPath.c_str());
+
+    // Envoi la requete HTTP au serveur
+    int httpResponseCode = http.GET();
+    StaticJsonBuffer<300> JSONBuffer;
+    JsonObject& json;
+
+    if (httpResponseCode > 0) //Si il y a une réponse
+    {
+      String payload = http.getString(); //recupère les données de réponse de l'API
+      Serial.println(payload);
+      json = JSONBuffer.parseObject(payload); //Met les données de réponse en JSON
+    }
+    else //Si il n'y a pas de réponse
+    {
+      Serial.print("Error code: ");
+      Serial.println(httpResponseCode);
+      json = JSONBuffer.parseObject("{}"); //("{}")/\("{}")/\("{}")/\("{}")/\("{}")/\("{}")/\("{}")/\("{}")/\("{}")
+                                           //\____________________________________________________________________/
+
+    }
+
+    http.end();
+
+    return json;
+  }
 }
 
 //---------------/ MAC Address /---------------//
