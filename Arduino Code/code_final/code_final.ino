@@ -7,6 +7,8 @@
 #define SSpin   21  // pin SDA du RC522 -> 21
 #define RSTpin  2   // pin RST du RC522 -> 2
 
+#define array_size(x) sizeof(x)/sizeof(x[0])
+
 
 const char* ssid = "Eleves";            //Nom du réseau wifi
 const char* password = "ml$@0931584S";  //Mot de passe du réseau wifi
@@ -14,25 +16,31 @@ const char* password = "ml$@0931584S";  //Mot de passe du réseau wifi
 String serverName = "https://b268076a-1104-466e-837a-a82b9ada121d.mock.pstmn.io/";  //Adresse de l'API
 bool standBy = false;
 
+
 MFRC522 rfid(SSpin, RSTpin); //Donner les pins 'SS' et 'RST' du capteur RFID
 
 void setup()
 {
   Serial.begin(115200);
+  
   //Initialisation du capteur RFID
   SPI.begin();
   rfid.PCD_Init();
   wifi_connexion();
   Serial.println("RFID-RC522 - Reader");
+
+  standByRead();
 }
 
 
 void loop()
 {
+  /*
   if (standBy == false)
     cardPresent();
   else if (standBy == false)
     standByRead();
+  */
 }
 
 //---------------/ Connexion au Wifi /---------------//
@@ -115,14 +123,17 @@ void standByRead()
 {
   StaticJsonBuffer<600> JSONBuffer;
   JsonObject& parsed = makeRequest("standby", "");
-  String idCadenas = parsed["idCadenas"]; //Récupère la clé "idCadenas"
-  bool veille = parsed["veille"]; //Récupère la clé "veille"
+  String idCadenas = parsed["CadenasEnVeille"]; //Récupère la clé "idCadenas"
   parsed.printTo(Serial);
   Serial.println();
   Serial.println(idCadenas);
-  Serial.println(veille);
 
-  if (idCadenas == getStringMacAddress()) //Si la réponse est celle pour le cadenas
+  for(int i = 0; i<array_size(idCadenas); i++)
+  {
+    Serial.println(idCadenas[i]);
+  }
+
+ /* if (idCadenas == getStringMacAddress()) //Si la réponse est celle pour le cadenas
   {
     if (veille == true)
     {
@@ -135,7 +146,7 @@ void standByRead()
       standBy = false;
     }
   }
-  delay(30000); //Delai de 5min
+  delay(30000); //Delai de 5min*/
 }
 
 //---------------/ Blink Led /---------------//
