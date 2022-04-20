@@ -13,7 +13,7 @@
 const char* ssid = "Eleves";            //Nom du réseau wifi
 const char* password = "ml$@0931584S";  //Mot de passe du réseau wifi
 
-String serverName = "https://b268076a-1104-466e-837a-a82b9ada121d.mock.pstmn.io/";  //Adresse de l'API
+String serverName = "http://51.210.151.13/btssnir/projets2022/fablab/api/";  //Adresse de l'API
 bool standBy = false;
 
 
@@ -29,18 +29,17 @@ void setup()
   wifi_connexion();
   Serial.println("RFID-RC522 - Reader");
 
-  standByRead();
 }
 
 
 void loop()
 {
-  /*
+  
   if (standBy == false)
     cardPresent();
   else if (standBy == false)
     standByRead();
-  */
+  
 }
 
 //---------------/ Connexion au Wifi /---------------//
@@ -99,16 +98,16 @@ void unlock_request(String uid)
   StaticJsonBuffer<600> JSONBuffer;
   JsonObject& parsed = makeRequest("unlock", uid);
   String idCadenas = parsed["idCadenas"];   //Récupère la clé "idCadenas"
-  bool action = parsed["action"];           //Récupère la clé "action"
+  bool succes = parsed["succes"];           //Récupère la clé "action"
   parsed.printTo(Serial);
   Serial.println();
   Serial.println(idCadenas);
-  Serial.println(action);
+  Serial.println(succes);
 
   if (idCadenas == getStringMacAddress()) //Si la réponse est celle pour le cadenas
   {
     Serial.println("*Requête pour ce cadenas*");
-    if (action == true) //Si il demande d'ouvrir
+    if (succes == true) //Si il demande d'ouvrir
     {
       //Faire ouvrir le cadenas - Activer le micro-moteur
       Serial.println("*Ouverture du cadenas*");
@@ -169,11 +168,11 @@ JsonObject& makeRequest(String type, String uid)
 
   if (type == "unlock")
   {
-    serverPath = serverName + "cadenas/ouvrir?idCadenas=" + getStringMacAddress() + "&idCarte=" + uid; //Rentre les données dans l'URL de requête de l'API
+    serverPath = serverName + "cadenas/ouvrir.php?idCadenas=" + getStringMacAddress() + "&idCarte=" + uid; //Rentre les données dans l'URL de requête de l'API
   }
   else if (type == "standby")
   {
-    serverPath = serverName + "cadenas/veille?idCadenas=" + getStringMacAddress(); //Rentre les données dans l'URL de requête de l'API
+    serverPath = serverName + "cadenas/veille.php?idCadenas=" + getStringMacAddress(); //Rentre les données dans l'URL de requête de l'API
   }
 
   if (WiFi.status() == WL_CONNECTED) // Verifie si connecté au wifi
