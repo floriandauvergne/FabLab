@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Table - Admin</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="../Script/banniere.js"></script>
+    <script src="Script/Membres.js"></script>
+</head>
+
+<body id="page-top">
+<div id="wrapper">
+    <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
+        <div class="container-fluid d-flex flex-column p-0"><a
+                class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0">
+            <div class="sidebar-brand-icon rotate-n-15"><img height="60px" width="60px" src="../Image/Fablab_logo-removebg-preview (3).png"></div>
+            <div class="sidebar-brand-text mx-3"><span>Admin</span></div>
+        </a>
+            <ul class="navbar-nav text-light" id="accordionSidebar">
+                <li class="nav-item"><a class="nav-link" href="index.html"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="membres.html"><i class="fas fa-users"></i><span>Membres</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="cadenas.html"><i class="fas fa-lock"></i><span>Cadenas</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="profile.html"><i class="far fa-id-badge"></i><span>Profil</span></a></li>
+                <li class="nav-item"><a class="nav-link" href="logs.html"><i class="far fa-id-badge"></i><span>Journal de bord</span></a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="d-flex flex-column" id="content-wrapper">
+        <div id="content">
+            <nav id="banniere" class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
+            </nav>
+            <div class="container-fluid">
+                <h3 class="text-dark mb-4">Membres du FabLab</h3>
+                <div class="card shadow">
+                    <div class="card-header py-3">
+                        <p class="text-primary m-0 fw-bold" id="Nombre_adherents">Nombre d'adhérents : </p>
+                        <br>
+                        <div id="Ajouter-un-membre-annuler" style="display: none;cursor: pointer;">
+                            <label>Annuler</label><i style="padding-left:8px;" class="far fa-times-circle"></i></div>
+                        <div id="Ajouter-un-membre" style="cursor: pointer;"><label>Ajouter un membre</label><i
+                                style="padding-left:8px" class="fas fa-user-plus"></i></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 text-nowrap">
+                                <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable"><label
+                                        class="form-label"><input id="recherche" type="search" class="form-control form-control-sm"
+                                                                  aria-controls="dataTable" placeholder="Recherche..."></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive table mt-2" role="grid"
+                             aria-describedby="dataTable_info" style="height: auto;">
+
+                            <table class="table my-1">
+                                <thead>
+                                <tr>
+                                    <th style="height: 50px;">Nom</th>
+                                    <th>Grade</th>
+                                    <th>Carte</th>
+                                    <th>Age</th>
+                                    <th>Type</th>
+                                    <th>Changement</th>
+                                </tr>
+                                </thead>
+                                <tbody style="max-height: 100px;" id="dataTable"></tbody>
+                            </table>
+
+                            <table class="table my-0" style="display: none">
+                                <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Prénom</th>
+                                    <th>Mail</th>
+                                    <th>Grade</th>
+                                    <th>Carte</th>
+                                    <th>Age</th>
+                                    <th>Type</th>
+                                    <th>Changement</th>
+                                </tr>
+                                </thead>
+                                <tbody id="dataTable-Nouveau" style="max-height: 100px;">
+                                <tr>
+                                    <td style="height: 50px;"><input id='Nom-Nouveau' type="search"
+                                                                     class="form-control form-control-sm"
+                                                                     aria-controls="dataTable"></td>
+
+                                    <td style="height: 50px;"><input id='Prenom-Nouveau' type="search"
+                                                                     class="form-control form-control-sm"
+                                                                     aria-controls="dataTable"></td>
+                                    <td style="height: 50px;"><input id='Mail-Nouveau' type="search"
+                                                                     class="form-control form-control-sm"
+                                                                     aria-controls="dataTable"></td>
+
+                                    <td><select id='Grade-Nouveau' style="margin-top: 5px;background: var(--bs-table-bg);color: var(--bs-table-striped-color);border-color:var(--bs-table-bg);">
+                                        <option value="1">Member</option>
+                                        <option value="2">Teacher</option>
+                                        <option value="3">Manager</option>
+                                        <option value="4">Admin</option>
+                                    </select></td>
+                                    <td><select id='Carte-Nouveau'
+                                                style="margin-top: 5px;background: var(--bs-table-bg);color:var(--bs-table-striped-color);border-color: var(--bs-table-bg);">
+                                        <option value="54877FE7">54877FE7</option>
+                                        <option value="54877FE8">54877FE8</option>
+                                        <option value="54877FE9">54877FE9</option>
+                                    </select></td>
+                                    <td><input id='Age-Nouveau' type="search" class="form-control form-control-sm"
+                                               aria-controls="dataTable">
+                                    </td>
+                                    <td><input id='Type-Nouveau' type="search" class="form-control form-control-sm"
+                                               aria-controls="dataTable"><br></td>
+                                    <td style="height: 50px;">
+                                        <button id='Ajouter-un-membre-confirmer' class="btn btn-primary"
+                                                type="button"
+                                                style="height: 30px;font-size: 12px;">
+                                            Confirmer
+                                        </button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="assets/bootstrap/js/bootstrap.min.js"></script>
+<script src="assets/js/bs-init.js"></script>
+<script src="assets/js/theme.js"></script>
+</body>
+</html>

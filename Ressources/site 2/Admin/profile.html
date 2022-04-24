@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Profile - Admin</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="../Script/banniere.js"></script>
+    <script src="../Script/profil.js"></script>
+</head>
+
+<body id="page-top">
+    <div id="wrapper">
+        <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
+            <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0">
+                    <div class="sidebar-brand-icon rotate-n-15"><img height="60px" width="60px" src="../Image/Fablab_logo-removebg-preview (3).png"></div>
+                    <div class="sidebar-brand-text mx-3"><span>Admin</span></div>
+                </a>
+                <ul class="navbar-nav text-light" id="accordionSidebar">
+                    <li class="nav-item"><a class="nav-link" href="index.html"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="membres.html"><i class="fas fa-users"></i><span>Membres</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="cadenas.html"><i class="fas fa-lock"></i><span>Cadenas</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="profile.html"><i class="far fa-id-badge"></i><span>Profil</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="logs.html"><i class="far fa-id-badge"></i><span>Journal de bord</span></a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <nav id="banniere" class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
+
+                </nav>
+                <div class="container-fluid">
+                    <h3 class="text-dark mb-4">Profil</h3>
+                    <div>
+                        <div class="card mb-3">
+                            <div class="card-body text-center shadow" style="height: 310px;">
+                                <img height="160px" width="160px" id="image_profil" class="rounded-circle mb-3 mt-4" width="160" height="160">
+                                <div class="mb-3">
+                                    <button class="btn btn-primary btn-sm" type="button" id="image_profil-bouton">Changer de photo</button>
+                                </div>
+                                <form style="display: none" id="photo" action="../../api/profil/photo.php" method="post" enctype="multipart/form-data">
+                                    <input type="file" id="file" name="file">
+                                    <br /><br />
+                                    <input type="submit" value="Confirmer" />
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="card shadow mb-3">
+                            <div class="card-header py-3" style="height: 60px;">
+                                <p class="text-primary m-0 fw-bold">User Settings<a href="../password.html" class="btn btn-primary btn-sm" style="float: right;" id="modif-mdp">Modifier son mot de passe</a></p>
+                            </div>
+                            <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="mb-3"><label class="form-label"><strong>Prénom</strong></label><input class="form-control" type="text" id="first_name" placeholder="" name="first_name"></div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="mb-3"><label class="form-label"><strong>Nom</strong></label><input class="form-control" type="text" id="last_name" placeholder="" name="last_name"></div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="mb-3"><label class="form-label"><strong>Téléphone</strong></label><input class="form-control" type="text" id="phone" placeholder="" name="Phone" maxlength="10"></div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="mb-3"><label class="form-label"><strong>Adresse Mail</strong></label><input class="form-control" type="email" id="email" placeholder="" name="email"></div>
+                                        </div>
+                                    </div>
+<!--                                    <div class="row">-->
+<!--                                        <div class="col">-->
+<!--                                            <div class="mb-3"><label class="form-label"><strong>Mot de passe</strong></label><input class="form-control" type="text" id="password" placeholder="" name="password"></div>-->
+<!--                                        </div>-->
+<!--                                        <div class="col">-->
+<!--                                            <div class="mb-3"><label class="form-label"><strong>Mot de passe confirmation</strong></label><input class="form-control" type="email" id="password-confirm" placeholder="" name="email"></div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+                                    <div class="mb-3"><button style="display: none" id="bouton-confirmation" class="btn btn-primary btn-sm">Save Settings</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/bs-init.js"></script>
+    <script src="assets/js/theme.js"></script>
+</body>
+
+</html>
