@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin</title>
+
+    <link rel="stylesheet" href="./style/Admin.css"/>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script src="./script/Cadena.js"></script>
+    <script src="./script/Info.js"></script>
+    <script src="./script/Membres.js"></script>
+    <script src="./script/Banniere.js"></script>
+</head>
+<body  align="center">
+<header>
+    <p>Prénom Grade<a href="Profil.html"><img src="../site/Image/photo_profil.jpg" height="90" width="90"></a></p>
+</header>
+
+<button id="cadenas_bouton">Cadenas</button>
+<button id="Info_bouton">Info.adhérents</button>
+<button id="Membres_bouton">Membres</button>
+<button id="Deconnexion">Déconnexion</button>
+
+<article id="Cadenas">
+    <div id="cadenas_liste" style="display: none">
+
+    </div>
+
+    <div id="cadenas_modif" style="display: none">
+        <table align="center" style="text-align: center" >
+            <thead>
+            <tr>
+                <th>Modifier le cadenas</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><label>Nom:</label><input  value="Nom"></td>
+            </tr>
+            <tr>
+                <td><label>Niveau de sécurité:</label><select id="Cadenas_Modif_Niveau"><option>Member</option><option>Teacher</option><option>Manager</option><option>Admin</option></select></td>
+            </tr>
+            </tbody>
+        </table>
+        <button>Confirmer</button><button>Annuler</button><button>Supprimer</button>
+    </div>
+
+<!--    <div id="cadenas_ajout" style="display: none">-->
+<!--        <table align="center">-->
+<!--            <thead>-->
+<!--            <tr>-->
+<!--                <th>Ajouter un cadenas</th>-->
+<!--            </tr>-->
+<!--            </thead>-->
+<!--            <tbody>-->
+<!--            <tr>-->
+<!--                <td><input  placeholder="Nom"></td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <td><input   placeholder="ID"></td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <td><input  placeholder="Niveau de sécurité"></td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </table>-->
+<!--        <button>Confirmer</button><button>Annuler</button>-->
+<!--    </div>-->
+</article>
+
+<article id="Info">
+    <div align="center" id="Info_tab" style="display: none">
+        <div style="  display: grid;grid-template-columns: 1fr 1fr 1fr;gap: 10px 2em;align-self: center;">
+            <div style="height: 25vh; width: 25vh;"  ><canvas id="myChart"></canvas></div>
+            <div style="height: 25vh; width: 25vh;"><canvas id="myChart2"></canvas></div>
+            <div style="height: 25vh; width: 25vh"  ><canvas id="myChart3"></canvas></div>
+            <div style="height: 25vh; width: 25vh"  ><canvas id="myChart4"></canvas></div>
+        </div>
+
+
+        <!--        <canvas id="Jour"></canvas>-->
+<!--        <canvas id="Mois" ></canvas>-->
+<!--        <canvas id="cadenas_stats"></canvas>-->
+<!--        <table>-->
+<!--            <thead>-->
+<!--            <tr>-->
+<!--                <th colspan="5">Temps de passage</th>-->
+<!--            </tr>-->
+<!--            </thead>-->
+<!--            <tbody>-->
+<!--            <tr>-->
+<!--                <td>Lundi</td>-->
+<!--                <td>Mardi</td>-->
+<!--                <td>Mercredi</td>-->
+<!--                <td>Jeudi</td>-->
+<!--                <td>Vendredi</td>-->
+<!--            </tr>-->
+<!--            <tr align="center">-->
+<!--                <td>Nom_1 :1H <br> Nom_2 :3H</td>-->
+<!--                <td>Personne</td>-->
+<!--                <td>Personne</td>-->
+<!--                <td>Nom_1 :4H <br> Nom_2 :2H</td>-->
+<!--                <td>Personne</td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </table>-->
+<!--        <table>-->
+<!--            <thead>-->
+<!--            <tr>-->
+<!--                <th colspan="5">Ouverture cadenas</th>-->
+<!--            </tr>-->
+<!--            </thead>-->
+<!--            <tbody>-->
+<!--            <tr>-->
+<!--                <td>Lundi</td>-->
+<!--                <td>Mardi</td>-->
+<!--                <td>Mercredi</td>-->
+<!--                <td>Jeudi</td>-->
+<!--                <td>Vendredi</td>-->
+<!--            </tr>-->
+<!--            <tr align="center">-->
+<!--                <td>Nom_1<li>Imprimante x2</li> <br> Nom_2 <li>Armoire x4</li></td>-->
+
+<!--                <td>Aucun cadenas</td>-->
+
+<!--                <td>Aucun cadenas</td>-->
+
+<!--                <td>Nom_1 <li>Imprimante x1</li><li>Armoire x2</li></td>-->
+
+<!--                <td>Aucun cadenas</td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </table>-->
+        <a href="javascript:void(0)" id="logs">Afficher l'intégralité des logs</a>
+    </div>
+
+    <div align="center" id="Info_log" style="display: none;">
+        <div id="logs_complets" style="overflow: scroll;max-height: 80vh; overflow-x: hidden;">
+
+        </div>
+
+        <a href="javascript:void(0)" id="retour">Retour</a>
+    </div>
+
+</article>
+
+<article id="Membres">
+    <div id="Membres_liste" style="display: none">
+        <h2 id="Nombre">Nombres d'adhérents total: </h2>
+        <div id="liste">
+        </div>
+        <button id="Afficher_plus" >Afficher plus</button><br>
+        <button id="Ajouter_un_membre">Ajouter un membre</button>
+        <button id="Affiche_Membres_présent">Afficher les membres présent</button>
+<!--        <button id="Membre_Ajout_Plusieurs">Ajouter plusieurs membres</button>-->
+    </div>
+
+<!--    <div id="Membre_Ajout_Plusieurs_Formulaire" style="display: none">-->
+<!--        <label for="myfile">Selectionner un fichier .CSV:</label>-->
+<!--        <br>-->
+<!--        <input type="file" id="myfile" name="myfile">-->
+<!--        <button>Confirmer</button><button id="Membre_Ajout_Plusieurs_Annuler">Annuler</button>-->
+<!--    </div>-->
+
+    <div align="center" id="Membres_présent">
+        <table>
+            <thead>
+            <tr>
+                <th colspan="5" id="time"></th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <div id="Membres_Modif" style="display: none" >
+        <table align="center">
+            <thead>
+            <tr>
+                <th>Info</th>
+            </tr>
+            </thead>
+            <tbody id="table_info">
+            <tr>
+                <td><img class='rounded-circle' src="../site/Image/photo_profil.jpg" height="65" width="65"></td>
+            </tr>
+            <tr>
+                <td><label>Nom :</label><input disabled value="Nom"></td>
+            </tr>
+            <tr>
+                <td><label>Prénom :</label><input disabled   value="Prénom"></td>
+            </tr>
+            <tr>
+                <td><label>Mail :</label><input disabled  value="Mail"></td>
+            </tr>
+            <tr>
+                <td><label>Grade :</label><select id="Membre_Modifier_Grade"  value="Grade">
+                    <option>Member</option>
+                    <option>Teacher</option>
+                    <option>Manager</option>
+                    <option>Admin</option>
+
+                </select> </td>
+            </tr>
+            <tr>
+                <td><label>Age:</label><input disabled  value="Age"></td>
+            </tr>
+            <tr>
+                <td><label>Téléphone :</label><input disabled  value="Téléphone"></td>
+            </tr>
+            </tbody>
+        </table>
+        <button>Confirmer</button><button id="Membres_Modif_Annuler" >Annuler</button><button id="Membres_Modif_Supprimer" >Supprimer</button>
+    </div>
+
+    <div id="Membres_Ajout" style="display: none" >
+        <table id="Membres_Ajout_Tableau" align="center">
+            <thead>
+            <tr>
+                <th>Info</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><input placeholder="Nom"></td>
+            </tr>
+            <tr>
+                <td><input placeholder="Prénom"></td>
+            </tr>
+            <tr>
+                <td><input placeholder="Mail"></td>
+            </tr>
+            <tr>
+                <td><input placeholder="Grade"></td>
+            </tr>
+            </tbody>
+        </table>
+        <button>Confirmer</button><button id="Membres_Ajout_Annuler">Annuler</button>
+    </div>
+</article>
+</body>
+<script>
+    let ctx;
+    let myChart
+
+    ctx = document.getElementById('myChart').getContext('2d');
+    myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            datasets: [{
+                label: 'Cadenas ',
+                data: [12, 19, 3, 5, 2, 3],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+             maintainAspectRatio:false,
+            scales: {
+                y: {
+                    beginAtZero: false,
+                }
+            }
+        }
+    });
+     ctx=document.getElementById('myChart2').getContext('2d');
+     myChart=new Chart(ctx, {
+         type: 'bar',
+         data: {
+             labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+             datasets: [{
+                 label: '# of Votes',
+                 data: [12, 19, 3, 5, 2, 3],
+                 backgroundColor: [
+                     'rgba(255, 99, 132, 1)',
+                     'rgba(54, 162, 235, 1)',
+                     'rgba(255, 206, 86, 1)',
+                     'rgba(75, 192, 192, 1)',
+                     'rgba(153, 102, 255, 1)',
+                     'rgba(255, 159, 64, 1)'
+                 ],
+                 borderColor: [
+                     'rgba(255, 99, 132, 1)',
+                     'rgba(54, 162, 235, 1)',
+                     'rgba(255, 206, 86, 1)',
+                     'rgba(75, 192, 192, 1)',
+                     'rgba(153, 102, 255, 1)',
+                     'rgba(255, 159, 64, 1)'
+                 ],
+                 borderWidth: 1
+             }]
+         },
+         options: {
+             maintainAspectRatio:false,
+             scales: {
+                 y: {
+                     beginAtZero: false,
+                 }
+             }
+         }
+     });
+
+    ctx=document.getElementById('myChart3').getContext('2d');
+    myChart=new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            datasets: [{
+                label: '# of Votes',
+                data: [12, 19, 3, 5, 2, 3],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            maintainAspectRatio:false,
+            scales: {
+                y: {
+                    beginAtZero: false,
+                }
+            }
+        }
+    });
+
+    ctx=document.getElementById('myChart4').getContext('2d');
+    myChart=new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            datasets: [{
+                label: '# of Votes',
+                data: [12, 19, 3, 5, 2, 3],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            maintainAspectRatio:false,
+            scales: {
+                y: {
+                    beginAtZero: false,
+                }
+            }
+        }
+    });
+
+
+
+</script>
+<!--<script>-->
+
+
+<!--    function addTemperature(time, data) {-->
+<!--        /* Ajoute la valeur en X */-->
+<!--        config.data.labels.push(time);-->
+
+<!--        /* Ajoute la valeur */-->
+<!--        //config.data.datasets[0].data.push(temperature);-->
+<!--        config.data.datasets[0].data.push(data);-->
+<!--        /* Rafraichir le graphique */-->
+<!--        chart.update();-->
+<!--    }-->
+
+
+
+<!--    // setInterval( function (){-->
+<!--    //     $.get("../degres.txt", function( temperature ) {-->
+<!--    //-->
+<!--    //-->
+<!--    //         parseInt(temperature);-->
+<!--    //-->
+<!--    //-->
+<!--    //         addTemperature(new Date().toLocaleTimeString(),temperature);-->
+<!--    //-->
+<!--    //     })-->
+<!--    // }, 10000);-->
+
+
+
+<!--    config = {-->
+<!--        type: "line", // Graphique de type Line-->
+<!--        data: {-->
+<!--            labels: [], // Données Axe X-->
+<!--            datasets: [{-->
+<!--                label: "Température °C", // Titre du jeu de données-->
+<!--                fill: false, // Juste un trait pour le tracé de la courbe-->
+<!--                backgroundColor: "green", // Couleur des points-->
+<!--                borderColor: "red", // Couleur du trait-->
+<!--                data: [] // Données Axe Y-->
+<!--            }]-->
+<!--        },-->
+<!--        options: {-->
+<!--            scales: {-->
+<!--                xAxes: [{-->
+<!--                    scaleLabel: { // Titre sur l'axe X-->
+<!--                        display: true,-->
+<!--                        labelString: "Temps"-->
+<!--                    }-->
+<!--                }],-->
+<!--                yAxes: [{-->
+<!--                    scaleLabel: { // Titre sur l'axe Y-->
+<!--                        display: true,-->
+<!--                        labelString: "°C"-->
+<!--                    }-->
+<!--                }]-->
+<!--            }-->
+<!--        }-->
+<!--    };-->
+
+<!--    /*Le contexte du canevas HTML */-->
+<!--    context = document.getElementById("Jour").getContext("2d");-->
+<!--    /* Création du graphique */-->
+<!--    chart = new Chart(context, config);-->
+<!--    context = document.getElementById("cadenas_stats").getContext("2d");-->
+<!--    /* Création du graphique */-->
+<!--    chart = new Chart(context, config);-->
+<!--    context = document.getElementById("Mois").getContext("2d");-->
+<!--    /* Création du graphique */-->
+<!--    chart = new Chart(context, config);-->
+<!--</script>-->
+</html>
