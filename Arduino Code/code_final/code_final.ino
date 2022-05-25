@@ -3,9 +3,10 @@
 #include <ArduinoJson.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
+#include <analogWrite.h>
 
 #define SSpin   21  // pin SDA du RC522 -> 21
-#define RSTpin  2   // pin RST du RC522 -> 2
+#define RSTpin  22   // pin RST du RC522 -> 22
 
 #define array_size(x) sizeof(x)/sizeof(x[0])
 
@@ -14,7 +15,7 @@ const char* ssid = "Eleves";            //Nom du réseau wifi
 const char* password = "ml$@0931584S";  //Mot de passe du réseau wifi
 
 String serverName = "http://51.210.151.13/btssnir/projets2022/fablab/api/";  //Adresse de l'API
-bool standBy = false;
+int etatCadenas = 1;
 
 
 MFRC522 rfid(SSpin, RSTpin); //Donner les pins 'SS' et 'RST' du capteur RFID
@@ -31,15 +32,14 @@ void setup()
 
 }
 
-
 void loop()
 {
-  
-  if (standBy == false)
+ 
+  if (etatCadenas == 1)
     cardPresent();
-  else if (standBy == false)
+  else if (etatCadenas == 0)
     standByRead();
-  
+ 
 }
 
 //---------------/ Connexion au Wifi /---------------//
@@ -112,6 +112,7 @@ void unlock_request(String uid)
       //Faire ouvrir le cadenas - Activer le micro-moteur
       Serial.println("*Ouverture du cadenas*");
       light_led(2, 500); //Repère visuel de l'ouverture
+      setMotor();
     }
   }
 }
@@ -122,30 +123,24 @@ void standByRead()
 {
   StaticJsonBuffer<600> JSONBuffer;
   JsonObject& parsed = makeRequest("standby", "");
-  String idCadenas = parsed["CadenasEnVeille"]; //Récupère la clé "idCadenas"
+  String idCadenas = parsed["idCadenas"]; //Récupère la clé "idCadenas"
+  String Actif = parsed["Actif"]; //Récupère la clé "Actif"
   parsed.printTo(Serial);
   Serial.println();
-  Serial.println(idCadenas);
 
-  for(int i = 0; i<array_size(idCadenas); i++)
+ if (idCadenas == getStringMacAddress()) //Si la réponse est celle pour le cadenas
   {
-    Serial.println(idCadenas[i]);
-  }
-
- /* if (idCadenas == getStringMacAddress()) //Si la réponse est celle pour le cadenas
-  {
-    if (veille == true)
+    if (Actif == 0)
     {
       Serial.println("*Mise en veille du cadenas*");
-      standBy = true;
+      etatCadenas = 1;
     }
-    else if (veille == false)
+    else if (Actif == 1)
     {
       Serial.println("*Mise en action du cadenas*");
-      standBy = false;
+      etatCadenas = 0;
     }
   }
-  delay(30000); //Delai de 5min*/
 }
 
 //---------------/ Blink Led /---------------//
@@ -172,7 +167,7 @@ JsonObject& makeRequest(String type, String uid)
   }
   else if (type == "standby")
   {
-    serverPath = serverName + "cadenas/veille.php?idCadenas=" + getStringMacAddress(); //Rentre les données dans l'URL de requête de l'API
+    serverPath = serverName + "cadenas/veille.php?idCadenas=" + getStringMacAddress() + "&statut=" + Actif; //Rentre les données dans l'URL de requête de l'API
   }
 
   if (WiFi.status() == WL_CONNECTED) // Verifie si connecté au wifi
@@ -218,4 +213,45 @@ String getStringMacAddress()
   idmacAddress.remove(10, 1);
 
   return idmacAddress; //Renvoi l'adresse MAC sans les ':'
+}
+
+
+void setMotor()
+{
+  const int EN =  33;
+  const int FB =  35;
+  const int SF =  34;
+  const int D2 = 32;
+  const int IN1 = 16;
+  const int IN2 =  17;
+
+  pinMode(EN, OUTPUT);
+  pinMode(D2, OUTPUT);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+
+    //Anti-Horaire
+  digitalWrite(EN, HIGH); // EN à 1 (active Le MC33926)
+  analogWrite(D2, 115); // D2 à PWM
+  digitalWrite(IN1, HIGH);  // IN1 à 1
+  digitalWrite(IN2, LOW);  // IN2 à 0
+  
+  delay(350);
+  
+  digitalWrite(EN, LOW); // EN à 1 (active Le MC33926)
+  
+  delay(3000);
+
+  //Horaire
+  digitalWrite(EN, HIGH); // EN à 1 (active Le MC33926)
+  analogWrite(D2, 125); // D2 à PWM
+  digitalWrite(IN1, LOW);  // IN1 à 1
+  digitalWrite(IN2, HIGH);  // IN2 à 0
+  
+  delay(350);
+  
+  digitalWrite(EN, LOW); // EN à 1 (active Le MC33926)
+  
+  delay(3000);
+  
 }
