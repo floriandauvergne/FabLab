@@ -52,7 +52,7 @@ void wifi_connexion()
   WiFi.begin(ssid, password); //Essaye de se connecter au wifi
 
   while (WiFi.status() != WL_CONNECTED) { //Tant que la connexion au wifi ne se fait pas
-    light_led(2, 500);
+    delay(500);
     Serial.print(".");
   }
   Serial.println("WiFi connected"); //Quand la connexion au wifi est effectué
