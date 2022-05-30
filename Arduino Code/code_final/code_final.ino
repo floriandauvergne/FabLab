@@ -52,7 +52,7 @@ void wifi_connexion()
   WiFi.begin(ssid, password); //Essaye de se connecter au wifi
 
   while (WiFi.status() != WL_CONNECTED) { //Tant que la connexion au wifi ne se fait pas
-    delay(500);
+    light_led(2, 500);
     Serial.print(".");
   }
   Serial.println("WiFi connected"); //Quand la connexion au wifi est effectué
@@ -110,9 +110,13 @@ void unlock_request(String uid)
     if (succes == true) //Si il demande d'ouvrir
     {
       //Faire ouvrir le cadenas - Activer le micro-moteur
-      Serial.println("*Ouverture du cadenas*");
+      Serial.println("Accès Autorisé");
       light_led(2, 500); //Repère visuel de l'ouverture
       setMotor();
+    }
+    else
+    {
+      Serial.println("Accès Refusé");
     }
   }
 }
@@ -124,7 +128,7 @@ void standByRead()
   StaticJsonBuffer<600> JSONBuffer;
   JsonObject& parsed = makeRequest("standby", "");
   String idCadenas = parsed["idCadenas"]; //Récupère la clé "idCadenas"
-  String Actif = parsed["Actif"]; //Récupère la clé "Actif"
+  int Actif = parsed["Actif"]; //Récupère la clé "Actif"
   parsed.printTo(Serial);
   Serial.println();
 
@@ -167,7 +171,7 @@ JsonObject& makeRequest(String type, String uid)
   }
   else if (type == "standby")
   {
-    serverPath = serverName + "cadenas/veille.php?idCadenas=" + getStringMacAddress() + "&statut=" + Actif; //Rentre les données dans l'URL de requête de l'API
+    serverPath = serverName + "cadenas/veille.php?idCadenas=" + getStringMacAddress() + "&statut=" + etatCadenas; //Rentre les données dans l'URL de requête de l'API
   }
 
   if (WiFi.status() == WL_CONNECTED) // Verifie si connecté au wifi
@@ -218,6 +222,7 @@ String getStringMacAddress()
 
 void setMotor()
 {
+  Serial.println("*Actionnement du Moteur*");
   const int EN =  33;
   const int FB =  35;
   const int SF =  34;
