@@ -11,7 +11,7 @@ int x = 0;
 void setup() 
 {
   Serial.begin(115200);
-  monservo.attach(17);
+  monservo.attach(32);
 }
 
 void loop() {

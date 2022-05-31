@@ -4,6 +4,9 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 #include <analogWrite.h>
+#include <ESP32Servo.h>
+#include <ESP32Tone.h>
+#include <ESP32PWM.h>
 
 #define SSpin   21  // pin SDA du RC522 -> 21
 #define RSTpin  22   // pin RST du RC522 -> 22
@@ -111,7 +114,6 @@ void unlock_request(String uid)
     {
       //Faire ouvrir le cadenas - Activer le micro-moteur
       Serial.println("Accès Autorisé");
-      light_led(2, 500); //Repère visuel de l'ouverture
       setMotor();
     }
     else
@@ -223,40 +225,13 @@ String getStringMacAddress()
 void setMotor()
 {
   Serial.println("*Actionnement du Moteur*");
-  const int EN =  33;
-  const int FB =  35;
-  const int SF =  34;
-  const int D2 = 32;
-  const int IN1 = 16;
-  const int IN2 =  17;
+  Servo monservo;
+  monservo.attach(32);
 
-  pinMode(EN, OUTPUT);
-  pinMode(D2, OUTPUT);
-  pinMode(IN1, OUTPUT);
-  pinMode(IN2, OUTPUT);
-
-    //Anti-Horaire
-  digitalWrite(EN, HIGH); // EN à 1 (active Le MC33926)
-  analogWrite(D2, 115); // D2 à PWM
-  digitalWrite(IN1, HIGH);  // IN1 à 1
-  digitalWrite(IN2, LOW);  // IN2 à 0
-  
-  delay(350);
-  
-  digitalWrite(EN, LOW); // EN à 1 (active Le MC33926)
-  
+  monservo.write(0);
+  delay(500);
+  monservo.write(45);
   delay(3000);
-
-  //Horaire
-  digitalWrite(EN, HIGH); // EN à 1 (active Le MC33926)
-  analogWrite(D2, 125); // D2 à PWM
-  digitalWrite(IN1, LOW);  // IN1 à 1
-  digitalWrite(IN2, HIGH);  // IN2 à 0
-  
-  delay(350);
-  
-  digitalWrite(EN, LOW); // EN à 1 (active Le MC33926)
-  
-  delay(3000);
-  
+  monservo.write(0);
+  delay(500);
 }
