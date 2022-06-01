@@ -226,14 +226,7 @@ void setMotor()
   delay(3000);
   monservo.write(45);
   delay(1000);
-  while(monservo.read()!= 45)
-  {
-    Serial.println(monservo.read());
-    monservo.write(45);
-    delay(1000);
-  }
-    
-    
+  
   monservo.detach();
 
   //monservo.write(0);
