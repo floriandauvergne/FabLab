@@ -22,11 +22,13 @@ int etatCadenas = 1;
 
 
 MFRC522 rfid(SSpin, RSTpin); //Donner les pins 'SS' et 'RST' du capteur RFID
+Servo monservo;
+  
 
 void setup()
 {
   Serial.begin(115200);
-  
+ 
   //Initialisation du capteur RFID
   SPI.begin();
   rfid.PCD_Init();
@@ -55,7 +57,7 @@ void wifi_connexion()
   WiFi.begin(ssid, password); //Essaye de se connecter au wifi
 
   while (WiFi.status() != WL_CONNECTED) { //Tant que la connexion au wifi ne se fait pas
-    delay(500);
+    light_led(2, 100); //Indication de lecture de la carte
     Serial.print(".");
   }
   Serial.println("WiFi connected"); //Quand la connexion au wifi est effectué
@@ -99,7 +101,7 @@ void cardPresent()
 void unlock_request(String uid)
 {
   StaticJsonBuffer<600> JSONBuffer;
-  JsonObject& parsed = makeRequest("unlock", uid);
+  JsonObject& parsed = makeRequest(serverName +"cadenas/ouvrir.php?idCadenas=" + getStringMacAddress() + "&idCarte=" + uid); //Rentre les données dans l'URL de requête de l'API);
   String idCadenas = parsed["idCadenas"];   //Récupère la clé "idCadenas"
   bool succes = parsed["succes"];           //Récupère la clé "action"
   parsed.printTo(Serial);
@@ -128,7 +130,7 @@ void unlock_request(String uid)
 void standByRead()
 {
   StaticJsonBuffer<600> JSONBuffer;
-  JsonObject& parsed = makeRequest("standby", "");
+  JsonObject& parsed = makeRequest(serverName + "cadenas/veille.php?idCadenas=" + getStringMacAddress() + "&statut=" + etatCadenas); //Rentre les données dans l'URL de requête de l'API
   String idCadenas = parsed["idCadenas"]; //Récupère la clé "idCadenas"
   int Actif = parsed["Actif"]; //Récupère la clé "Actif"
   parsed.printTo(Serial);
@@ -149,32 +151,11 @@ void standByRead()
   }
 }
 
-//---------------/ Blink Led /---------------//
-
-void light_led(int pin, int temps)
-{
-  pinMode(pin, OUTPUT);
-  digitalWrite(pin, HIGH);   //Allume la led
-  delay(temps);
-  digitalWrite(pin, LOW);    //Éteint la led
-  delay(temps);
-}
-
 //---------------/ Faire la requête /---------------//  \("{}")/
 
-JsonObject& makeRequest(String type, String uid)
+JsonObject& makeRequest(String serverPath)
 {
   StaticJsonBuffer<600> JSONBuffer;
-  String serverPath;
-
-  if (type == "unlock")
-  {
-    serverPath = serverName + "cadenas/ouvrir.php?idCadenas=" + getStringMacAddress() + "&idCarte=" + uid; //Rentre les données dans l'URL de requête de l'API
-  }
-  else if (type == "standby")
-  {
-    serverPath = serverName + "cadenas/veille.php?idCadenas=" + getStringMacAddress() + "&statut=" + etatCadenas; //Rentre les données dans l'URL de requête de l'API
-  }
 
   if (WiFi.status() == WL_CONNECTED) // Verifie si connecté au wifi
   {
@@ -203,6 +184,8 @@ JsonObject& makeRequest(String type, String uid)
       return json;
     }
   }
+  //else
+  
   return JSONBuffer.parseObject("{}");
 }
 
@@ -221,17 +204,40 @@ String getStringMacAddress()
   return idmacAddress; //Renvoi l'adresse MAC sans les ':'
 }
 
+//---------------/ Blink Led /---------------//
+
+void light_led(int pin, int temps)
+{
+  pinMode(pin, OUTPUT);
+  digitalWrite(pin, HIGH);   //Allume la led
+  delay(temps);
+  digitalWrite(pin, LOW);    //Éteint la led
+  delay(temps);
+}
+
+//---------------/ Set Motor /---------------//
 
 void setMotor()
 {
   Serial.println("*Actionnement du Moteur*");
-  Servo monservo;
-  monservo.attach(32);
 
-  monservo.write(0);
-  delay(500);
-  monservo.write(45);
+  monservo.attach(32);
+  monservo.write(60);
   delay(3000);
-  monservo.write(0);
-  delay(500);
+  monservo.write(45);
+  delay(1000);
+  while(monservo.read()!= 45)
+  {
+    Serial.println(monservo.read());
+    monservo.write(45);
+    delay(1000);
+  }
+    
+    
+  monservo.detach();
+
+  //monservo.write(0);
+  //delay(1000);
+  //monservo.write(0);
+  //delay(1000);
 }
