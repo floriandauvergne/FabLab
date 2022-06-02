@@ -54,7 +54,7 @@ void wifi_connexion()
   WiFi.begin(ssid, password); //Essaye de se connecter au wifi
 
   while (WiFi.status() != WL_CONNECTED) { //Tant que la connexion au wifi ne se fait pas
-    light_led(1, 100); //Indication de lecture de la carte
+    light_led(2, 100); //Indication de lecture de la carte
     Serial.print(".");
   }
   Serial.println("WiFi connected"); //Quand la connexion au wifi est effectué
@@ -222,7 +222,7 @@ void setMotor()
   monservo.attach(32);
   monservo.write(60);
   delay(3000);
-  monservo.write(45);
+  monservo.write(40);
   delay(1000);
   
   monservo.detach();
