@@ -11,9 +11,6 @@
 #define SSpin   21  // pin SDA du RC522 -> 21
 #define RSTpin  22   // pin RST du RC522 -> 22
 
-#define array_size(x) sizeof(x)/sizeof(x[0])
-
-
 const char* ssid = "Eleves";            //Nom du réseau wifi
 const char* password = "ml$@0931584S";  //Mot de passe du réseau wifi
 
@@ -57,7 +54,7 @@ void wifi_connexion()
   WiFi.begin(ssid, password); //Essaye de se connecter au wifi
 
   while (WiFi.status() != WL_CONNECTED) { //Tant que la connexion au wifi ne se fait pas
-    light_led(2, 100); //Indication de lecture de la carte
+    light_led(1, 100); //Indication de lecture de la carte
     Serial.print(".");
   }
   Serial.println("WiFi connected"); //Quand la connexion au wifi est effectué
@@ -116,6 +113,7 @@ void unlock_request(String uid)
     {
       //Faire ouvrir le cadenas - Activer le micro-moteur
       Serial.println("Accès Autorisé");
+      light_led(3, 500); //Indication de lecture de la carte
       setMotor();
     }
     else
