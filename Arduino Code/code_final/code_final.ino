@@ -24,24 +24,20 @@ Servo monservo;
 
 void setup()
 {
-  Serial.begin(115200);
- 
+  //Serial.begin(9600);
   //Initialisation du capteur RFID
   SPI.begin();
   rfid.PCD_Init();
   wifi_connexion();
   Serial.println("RFID-RC522 - Reader");
-
 }
 
 void loop()
 {
- 
   if (etatCadenas == 1)
     cardPresent();
   else if (etatCadenas == 0)
     standByRead();
- 
 }
 
 //---------------/ Connexion au Wifi /---------------//
@@ -54,7 +50,7 @@ void wifi_connexion()
   WiFi.begin(ssid, password); //Essaye de se connecter au wifi
 
   while (WiFi.status() != WL_CONNECTED) { //Tant que la connexion au wifi ne se fait pas
-    light_led(2, 100); //Indication de lecture de la carte
+    light_led(1, 100); //Indication de lecture de la carte
     Serial.print(".");
   }
   Serial.println("WiFi connected"); //Quand la connexion au wifi est effectué
@@ -68,7 +64,7 @@ void cardPresent()
   {
     if (rfid.PICC_ReadCardSerial())  // on a lu avec succès son contenu
     {
-      light_led(2, 500); //Indication de lecture de la carte
+      light_led(1, 500); //Indication de lecture de la carte
       String uid = "";
 
       for (byte i = 0; i < rfid.uid.size; i++)
@@ -113,12 +109,20 @@ void unlock_request(String uid)
     {
       //Faire ouvrir le cadenas - Activer le micro-moteur
       Serial.println("Accès Autorisé");
-      light_led(3, 500); //Indication de lecture de la carte
-      setMotor();
+
+        pinMode(3,OUTPUT);
+        digitalWrite(3, HIGH);   // turn the LED on (HIGH is the voltage level)
+        setMotor();
+        digitalWrite(3, LOW);
     }
     else
     {
       Serial.println("Accès Refusé");
+      
+      pinMode(1,OUTPUT);
+      digitalWrite(1, HIGH);   // turn the LED on (HIGH is the voltage level)
+      delay(3000);                       // wait for a second
+      digitalWrite(1, LOW);
     }
   }
 }
@@ -173,18 +177,8 @@ JsonObject& makeRequest(String serverPath)
       http.end();
       return json;
     }
-    else //Si il n'y a pas de réponse
-    {
-      Serial.print("Error code: ");
-      Serial.println(httpResponseCode);
-      JsonObject& json = JSONBuffer.parseObject("{}");
-      http.end();
-      return json;
-    }
   }
-  //else
-  
-  return JSONBuffer.parseObject("{}");
+  resetESP();
 }
 
 //---------------/ MAC Address /---------------//
@@ -226,9 +220,12 @@ void setMotor()
   delay(1000);
   
   monservo.detach();
+}
 
-  //monservo.write(0);
-  //delay(1000);
-  //monservo.write(0);
-  //delay(1000);
+//---------------/ Reset ESP32 /---------------//
+
+void resetESP()
+{
+  pinMode(6, OUTPUT);
+  digitalWrite(6, HIGH);
 }

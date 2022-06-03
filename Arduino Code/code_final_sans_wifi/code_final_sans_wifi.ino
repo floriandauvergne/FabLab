@@ -13,18 +13,25 @@ Servo monservo;
 
 void setup()
 {
-  Serial.begin(115200);
+  //Serial.begin(115200);
  
   //Initialisation du capteur RFID
   SPI.begin();
   rfid.PCD_Init();
   Serial.println("RFID-RC522 - Reader");
+  pinMode(1, OUTPUT);
 
 }
 
 void loop()
 {
+  
   cardPresent();
+  digitalWrite(1, HIGH);   // turn the LED on (HIGH is the voltage level)
+  delay(1000);                       // wait for a second
+  digitalWrite(1, LOW);    // turn the LED off by making the voltage LOW
+  delay(1000);                       // wait for a second
+  
 }
 
 //---------------/ Détecter et lire la carte /---------------//
