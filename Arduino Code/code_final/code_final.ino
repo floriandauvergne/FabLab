@@ -1,3 +1,4 @@
+#include <Ticker.h>
 #include <SPI.h>
 #include <MFRC522.h>
 #include <ArduinoJson.h>
@@ -15,16 +16,15 @@ const char* ssid = "Eleves";            //Nom du réseau wifi
 const char* password = "ml$@0931584S";  //Mot de passe du réseau wifi
 
 String serverName = "http://51.210.151.13/btssnir/projets2022/fablab/api/";  //Adresse de l'API
-int etatCadenas = 1;
-
 
 MFRC522 rfid(SSpin, RSTpin); //Donner les pins 'SS' et 'RST' du capteur RFID
 Servo monservo;
-  
+
+Ticker tickerAndroid;
 
 void setup()
 {
-  //Serial.begin(9600);
+  Serial.begin(9600);
   //Initialisation du capteur RFID
   SPI.begin();
   rfid.PCD_Init();
@@ -37,15 +37,12 @@ void setup()
   wifi_connexion();
   Serial.println("RFID-RC522 - Reader");
 
-
+  tickerAndroid.attach(5000, android_request);
 }
 
 void loop()
 {
-  if (etatCadenas == 1)
     cardPresent();
-  else if (etatCadenas == 0)
-    standByRead();
 }
 
 //---------------/ Connexion au Wifi /---------------//
@@ -57,9 +54,15 @@ void wifi_connexion()
   //Connexion avec l'identifiant et le mdp
   WiFi.begin(ssid, password); //Essaye de se connecter au wifi
 
+  int x = 0;
   while (WiFi.status() != WL_CONNECTED) { //Tant que la connexion au wifi ne se fait pas
     light_led(1, 100); //Indication de lecture de la carte
     Serial.print(".");
+    x++;
+    if(x>20)
+    {
+      resetESP();
+    }
   }
   Serial.println("WiFi connected"); //Quand la connexion au wifi est effectué
 }
@@ -91,7 +94,7 @@ void cardPresent()
       }
 
       Serial.println("\nID Carte : " + uid);
-      unlock_request(uid);
+      unlock_request("cadenas",uid);
       delay(1000);
     }
   }
@@ -99,16 +102,26 @@ void cardPresent()
 
 //---------------/ Requête pour déverouiller /---------------//
 
-void unlock_request(String uid)
+void unlock_request(String type, String uid)
 {
   StaticJsonBuffer<600> JSONBuffer;
-  JsonObject& parsed = makeRequest(serverName +"cadenas/ouvrir.php?idCadenas=" + getStringMacAddress() + "&idCarte=" + uid); //Rentre les données dans l'URL de requête de l'API);
+  String request = "";
+  if(type == "android")
+  {
+    Serial.println("Requête Ouverture Android");
+    request = serverName +"cadenas/ouvrir.php?type=read&idCadenas=" + getStringMacAddress();
+  }
+  else if(type == "cadenas")
+  {
+    Serial.println("Requête Ouverture Badge");
+    request = serverName +"cadenas/ouvrir.php?type=cadenas&idCadenas=" + getStringMacAddress() + "&idCarte=" + uid;
+  }
+
+  JsonObject& parsed = makeRequest(request); //Rentre les données dans l'URL de requête de l'API);
   String idCadenas = parsed["idCadenas"];   //Récupère la clé "idCadenas"
   bool succes = parsed["succes"];           //Récupère la clé "action"
   parsed.printTo(Serial);
   Serial.println();
-  Serial.println(idCadenas);
-  Serial.println(succes);
 
   if (idCadenas == getStringMacAddress()) //Si la réponse est celle pour le cadenas
   {
@@ -135,31 +148,6 @@ void unlock_request(String uid)
   }
 }
 
-//---------------/ Requête pour la mise en veille /---------------//
-
-void standByRead()
-{
-  StaticJsonBuffer<600> JSONBuffer;
-  JsonObject& parsed = makeRequest(serverName + "cadenas/veille.php?idCadenas=" + getStringMacAddress() + "&statut=" + etatCadenas); //Rentre les données dans l'URL de requête de l'API
-  String idCadenas = parsed["idCadenas"]; //Récupère la clé "idCadenas"
-  int Actif = parsed["Actif"]; //Récupère la clé "Actif"
-  parsed.printTo(Serial);
-  Serial.println();
-
- if (idCadenas == getStringMacAddress()) //Si la réponse est celle pour le cadenas
-  {
-    if (Actif == 0)
-    {
-      Serial.println("*Mise en veille du cadenas*");
-      etatCadenas = 1;
-    }
-    else if (Actif == 1)
-    {
-      Serial.println("*Mise en action du cadenas*");
-      etatCadenas = 0;
-    }
-  }
-}
 
 //---------------/ Faire la requête /---------------//  \("{}")/
 
@@ -236,4 +224,11 @@ void resetESP()
 {
   pinMode(6, OUTPUT);
   digitalWrite(6, HIGH);
+}
+
+//---------------/ Déverrouiller Android /---------------//
+
+void android_request()
+{
+  unlock_request("android", "");
 }
