@@ -28,8 +28,16 @@ void setup()
   //Initialisation du capteur RFID
   SPI.begin();
   rfid.PCD_Init();
+  
+  monservo.attach(32);
+  monservo.write(40);
+  delay(1000);
+  monservo.detach();
+  
   wifi_connexion();
   Serial.println("RFID-RC522 - Reader");
+
+
 }
 
 void loop()
