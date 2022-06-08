@@ -1,16 +1,19 @@
-#include <Ticker.h>
 #include <SPI.h>
 #include <MFRC522.h>
 #include <ArduinoJson.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
-#include <analogWrite.h>
 #include <ESP32Servo.h>
 #include <ESP32Tone.h>
 #include <ESP32PWM.h>
 
 #define SSpin   21  // pin SDA du RC522 -> 21
 #define RSTpin  22   // pin RST du RC522 -> 22
+
+
+hw_timer_t * timer = NULL; 
+volatile bool interruptbool1 = false;
+int adc_read_counter = 0;
 
 const char* ssid = "Eleves";            //Nom du réseau wifi
 const char* password = "ml$@0931584S";  //Mot de passe du réseau wifi
@@ -20,7 +23,8 @@ String serverName = "http://51.210.151.13/btssnir/projets2022/fablab/api/";  //A
 MFRC522 rfid(SSpin, RSTpin); //Donner les pins 'SS' et 'RST' du capteur RFID
 Servo monservo;
 
-Ticker tickerAndroid;
+hw_timer_t * timerBegin(uint8_t , uint16_t divider, bool countUp);
+
 
 void setup()
 {
@@ -35,14 +39,17 @@ void setup()
   monservo.detach();
   
   wifi_connexion();
+  setTimer();
   Serial.println("RFID-RC522 - Reader");
 
-  tickerAndroid.attach(5000, android_request);
+  
 }
 
 void loop()
 {
-    cardPresent();
+  cardPresent();
+
+  checkTimer(15);
 }
 
 //---------------/ Connexion au Wifi /---------------//
@@ -59,7 +66,7 @@ void wifi_connexion()
     light_led(1, 100); //Indication de lecture de la carte
     Serial.print(".");
     x++;
-    if(x>20)
+    if(x>50)
     {
       resetESP();
     }
@@ -226,9 +233,34 @@ void resetESP()
   digitalWrite(6, HIGH);
 }
 
-//---------------/ Déverrouiller Android /---------------//
+//---------------/ SetTimer /---------------//
 
-void android_request()
+void setTimer()
 {
-  unlock_request("android", "");
+  timer = timerBegin(0, 80, true);                //Begin timer with 1 MHz frequency (80MHz/80)
+  timerAttachInterrupt(timer, &onTimer, true);   //Attach the interrupt to Timer1
+  timerAlarmWrite(timer, 1000, true);      //Initialize the timer
+  timerAlarmEnable(timer);
+}
+
+//---------------/ checkTimer /---------------//
+
+void checkTimer(int duree)
+{
+  //1000 -> 25sec
+  int temps = duree * 40;
+  if(interruptbool1 == true){
+      interruptbool1 = false;
+      if(adc_read_counter == temps){
+          unlock_request("android","");
+          adc_read_counter = 0;
+        }
+      adc_read_counter++;
+    }
+}
+
+//---------------/ onTimer /---------------//
+
+void onTimer() {
+   interruptbool1 = true; //Indicates that the interrupt has been entered since the last time its value was changed to false 
 }
