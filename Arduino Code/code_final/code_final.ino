@@ -28,7 +28,7 @@ hw_timer_t * timerBegin(uint8_t , uint16_t divider, bool countUp);
 
 void setup()
 {
-  Serial.begin(9600);
+  //Serial.begin(9600);
   //Initialisation du capteur RFID
   SPI.begin();
   rfid.PCD_Init();
