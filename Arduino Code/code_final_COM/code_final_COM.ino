@@ -23,7 +23,7 @@ Servo monservo;
 
 void setup()
 {
-  //Serial.begin(9600);
+ // Serial.begin(9600);
 
   SPI.begin();      //Démarrage de la liaison série
   rfid.PCD_Init();  //Initialisation du capteur RFID
